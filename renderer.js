@@ -5,11 +5,13 @@
 const BrowserWindow = require('electron').remote.BrowserWindow
 const path = require('path')
 
-const newWindowBtn = document.getElementById('openzrt')
+const newWindowBtn = document.getElementById('testpage')
 
 newWindowBtn.addEventListener('click', function (event) {
-  let win = new BrowserWindow({ width: 400, height: 320 });
+  const modalPath = path.join('file://', __dirname, 'testpage.html')
+  let win = new BrowserWindow({ width: 800, height: 600 });
   win.on('close', function () { win = null });
-  win.loadURL("https://zrt.io");
+  win.loadURL(modalPath);
+  win.webContents.openDevTools()
   win.show()
 })
