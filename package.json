@@ -1,0 +1,21 @@
+{
+  "name": "alphared7_gui",
+  "version": "0.0.1",
+  "description": "AlphaRed7-GUI is the home and base of AlphaRed7-AI. It has anti-gravity devices to avoid too much energy consuming. And for the anti-invasion of alien, there are 55 auto laser guns on the roof. No one can close to it.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.zrt.io:3000/AlphaRed7/GUI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "electron": "^1.6.11",
+    "jquery": "^3.2.1"
+  }
+}
