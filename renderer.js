@@ -9,9 +9,9 @@ const newWindowBtn = document.getElementById('testpage')
 
 newWindowBtn.addEventListener('click', function (event) {
   const modalPath = path.join('file://', __dirname, 'testpage.html')
-  let win = new BrowserWindow({ width: 800, height: 600 });
+  let win = new BrowserWindow({ width: 700, height: 500 });
   win.on('close', function () { win = null });
   win.loadURL(modalPath);
-  win.webContents.openDevTools()
+  //win.webContents.openDevTools()
   win.show()
 })
