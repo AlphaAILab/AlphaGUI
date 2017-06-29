@@ -29,6 +29,7 @@ function createWindow () {
   win.loadURL(modalPath);
   //win.webContents.openDevTools()
   win.show()
+  mainWindow.focus()
 // end open test page
 
 
