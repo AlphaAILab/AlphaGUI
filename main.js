@@ -22,6 +22,16 @@ function createWindow () {
     slashes: true
   }))
 
+  // open testpage
+  const modalPath = path.join('file://', __dirname, 'testpage.html')
+  let win = new BrowserWindow({ width: 800, height: 600 });
+  win.on('close', function () { win = null });
+  win.loadURL(modalPath);
+  //win.webContents.openDevTools()
+  win.show()
+// end open test page
+
+
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 
