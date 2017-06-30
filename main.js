@@ -13,15 +13,15 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 300, height: 300})
+  mainWindow = new BrowserWindow({width: 800, height: 600})
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'loading.html'),
+    pathname: path.join(__dirname, 'home.html'),
     protocol: 'file:',
     slashes: true
   }))
-
+/*
   // open testpage
   const modalPath = path.join('file://', __dirname, 'testpage.html')
   let win = new BrowserWindow({ width: 800, height: 600 });
@@ -31,7 +31,7 @@ function createWindow () {
   win.show()
   mainWindow.focus()
 // end open test page
-
+*/
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
