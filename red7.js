@@ -1,4 +1,7 @@
 'use strict'
+
+var deepCopy=function(source){var result={};for(var key in source){result[key]=typeof source[key]==='object'?deepCopy(source[key]):source[key];}return result;}
+
 function Game(num_players, removed_cards) {
     this.num_players = num_players;
     this.hands = new Array(num_players);
@@ -6,7 +9,7 @@ function Game(num_players, removed_cards) {
     this.current_rule = 7;
     //this.log_string = "";
 
-    whole = []
+    var whole = []
     for (var i = 1; i <= 7; i++) {
         for (var j = 1; j <= 7; j++) {
             var c = i*10 + j;
@@ -18,26 +21,28 @@ function Game(num_players, removed_cards) {
     }
 
     for (var i = 0; i < whole.length; i++) {
-        x = Math.floor(Math.random() * (i+1));
+        var x = Math.floor(Math.random() * (i+1));
         [whole[x], whole[i]] = [whole[i], whole[x]];
     }
 
     for (var player = 0; player < this.num_players; player++) {
         this.hands[player] = [];
-        this.palette[player] = whole.pop();
+        this.palette[player] = [whole.pop()];
         for (var i = 0; i < 7; i++) {
             this.hands[player].push(whole.pop());
         }
     }
 
     //console.log(whole);
-    console.log(this.hands);
-    console.log(this.palette);
+    //console.log(this.hands);
+    //console.log(this.palette);
 }
 
 function max_element(a){
+    //console.log(a);
     var tmp = a[0];
     for(var x of a){
+        //console.log("x = " + x);
         if(x>tmp) tmp=x;
     }
     return tmp;
@@ -52,7 +57,7 @@ function compare(a,b){
 
 function red(a){
     // Highest
-    r=[];
+    var r=[];
     r.push(max_element(a));
     return r;
 }
@@ -132,19 +137,104 @@ function violet(a) {
     return r;
 }
 
+var _get_top = {
+    7: red,
+    6: orange,
+    5: yellow,
+    4: green,
+    3: blue,
+    2: indigo,
+    1: violet
+};
 
 
-function winner(rule){
+function _get_winner(rule){
     // palette
+    if (rule === 0) rule = this.current_rule;
+    var best_hand = [];
+    var win = -1;
+
+    for (var i = 0; i < this.num_players; i++) {
+        var cur = _get_top[rule](this.palette[i]);
+        if (compare(cur, best_hand)) {
+            best_hand = cur;
+            win = i;
+        }
+    }
+    return win; 
+}
+
+function _get_player_highest(player, rule) {
+    if (rule === 0) rule = this.current_rule;
+    return _get_top[rule](this.palette[player]);
+}
+
+function _try_play(player, card, rule_card) {
+    var hands = [];
+    for (var x of this.hands[player]) hands.push(x);
+
+    if (card > 0) {
+        var cid = hands.indexOf(card);
+        if (cid < 0) return false;
+        hands.splice(cid, 1);
+    }
+    if (rule_card > 0) {
+        var cid = hands.indexOf(rule_card);
+        if (cid < 0) return false;
+        hands.splice(cid, 1);
+    }
     
+    var winning = false;
+    if (card > 0) this.palette[player].push(card);
+    winning = this.get_winner(rule_card % 10) === player;
+    if (card > 0) this.palette[player].pop();
+
+    return winning;
+}
+
+function _play(player, card, rule_card) {
+    if (card > 0) {
+        var cid = this.hands[player].indexOf(card);
+        if (cid < 0) {
+            console.log("Card no in player " + player + "'s hand");
+            card = 0;
+        } else {
+            this.palette[player].push(card);
+            this.hands[player].splice(cid, 1);
+        }
+    }
+    if (rule_card > 0) {
+        var cid = this.hands[player].indexOf(rule_card);
+        if (cid < 0) {
+            console.log("Rule card not in player " + player + "'s hand");
+            rule_card = 0;
+        } else {
+            this.hands[player].splice(cid, 1);
+        }
+    }
+    var current_winning = false;
+    if (card > 0 || rule_card > 0) {
+        var rule = rule_card % 10;
+        if (this.get_winner(rule) === player) {
+            if (rule_card > 0) {
+                this.current_rule = rule;
+            }
+            current_winning = true;
+        }
+    }
+
+    return current_winning;
 }
 
 Game.prototype = {
     constructor: Game,
-    winner: winner
+    get_winner: _get_winner,
+    get_player_highest: _get_player_highest,
+    try_play: _try_play,
+    play: _play
 }
 
-Game(2, [11,12,13,14,15,16,17])
+//Game(2, [11,12,13,14,15,16,17])
 
 module.exports = {
     Game: Game
