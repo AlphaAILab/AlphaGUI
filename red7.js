@@ -1,7 +1,5 @@
 'use strict'
 
-var deepCopy=function(source){var result={};for(var key in source){result[key]=typeof source[key]==='object'?deepCopy(source[key]):source[key];}return result;}
-
 function Game(num_players, removed_cards) {
     this.num_players = num_players;
     this.hands = new Array(num_players);
@@ -236,6 +234,4 @@ Game.prototype = {
 
 //Game(2, [11,12,13,14,15,16,17])
 
-module.exports = {
-    Game: Game
-}
+module.exports = Game;
