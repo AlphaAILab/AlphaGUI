@@ -36,14 +36,16 @@
                         margin-left: 8px;
                     }
                  </style>
-                <div class="card-lg card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="30px">   </div>
-                <div class="card-lg card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="30px">   </div>
-                <div class="card-lg card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="30px">   </div>
+                 <div id="handB">
+
+                  </div>
             </div>
             <div class="col-sm-2">
-                <p>ZRT
+                <p><span id="nameB"> </span>
                 <br/>
-                28 </p>
+                <span id="scoreB"></span></p>
+                <br/>
+                <span id="clockB"> </span>
             </div>
         </div>
         <div class="row">
@@ -55,46 +57,25 @@
                         margin-left: 4px;
                     }
                  </style>
-            <div class="card-sm card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="15px">   </div>
-                <div class="card-sm card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="15px">   </div>
-                <div class="card-sm card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="15px">   </div>    
+                 <div id="paletteB"></div>
          </div>
-        <div class="row text-warning" id="rule" style="height:100px;">SAME COLOR</div>
+        <div class="row text-warning" id="rule" style="height:100px;"></div>
         <div class="row"> 
-            <style>
-                    .card-sm{
-                        width:30px;
-                        height: 60px;
-                        display: inline-block;
-                        margin-left: 4px;
-                    }
-                 </style>
-            <div class="card-sm card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="15px">   </div>
-                <div class="card-sm card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="15px">   </div>
-                <div class="card-sm card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="15px">   </div>  
+                 <div id="paletteA"></div>
 
         </div>
         <div class="row">
             <div class="col-sm-2">
-                <p>Chenyao
+                <p><span id="nameA"> </span>
                 <br/>
-                31 </p>
+                <span id="scoreA"></span></p>
+                <br/>
+                <span id="clockA"> </span>
             </div>
              <div class="col-sm-10">
-                <style>
-                    .card-lg{
-                        width:60px;
-                        display: inline-block;
-                        margin-left: 8px;
-                    }
-                 </style>
-                <div class="card-lg card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="30px">   </div>
-                <div class="card-lg card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="30px">   </div>
-                <div class="card-lg card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="30px">   </div>
-                <div class="card-lg card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="30px">   </div>
-                <div class="card-lg card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="30px">   </div>
-                <div class="card-lg card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="30px">   </div>
-                <div class="card-lg card-red card-7 well"> <span>7</span> <br> <img src="./loading.svg" width="30px">   </div>
+                 <div id="handA">
+
+                  </div>
             </div>
             
          </div>
@@ -199,5 +180,6 @@
     });
   });
 </script>
+<script src="./arena.js"></script>
 </body>
 </html>
