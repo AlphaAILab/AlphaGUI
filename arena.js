@@ -1,6 +1,7 @@
 'user strict'
 
 var Red7 = require('./red7.js');
+var Bot = require('./mybot.js');
 let g;
 var A={};
 var B={};
@@ -195,6 +196,7 @@ function click_undo(){
     disablebtn('#play-card');
     disablebtn('#play-rule');
     disablebtn('#undo');
+    _card = _rule_card = 0;
 }
 
 function select_card(cid){
@@ -313,7 +315,16 @@ function Run(X,nxtX){
     // 如果B是remote,调网络库获取操作，并执行。
     start_clock(round_num,X,do_operation);
     if(X.type === "bot"){
-        // my bot 操作
+        var bot = new Bot("./trivial.exe");
+        bot.run(g.gen_input(X.gid), X.roundtime * 1000, function (err, card, rule_card) {
+            if (err !== 0) {
+                console.log("error: " + err);
+            }
+            console.log("do opearation card = " + card + "\trule_card = " + rule_card);
+            setTimeout(function () {
+                do_operation(card, rule_card);
+            }, 2000);
+        });
     }else if(X.type === "human"){
         selectable = true;
         _card = _rule_card = 0 ;

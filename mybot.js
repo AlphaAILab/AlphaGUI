@@ -79,10 +79,14 @@ function _run(input, timelimit, callback) {
         else {
             [rule_card, card] = parse_output(output_txt);
         }
-/*
-        try { fs.unlinkSync(input_file);} catch (e) {}
-        try { fs.unlinkSync(output_file);} catch (e) {}
-        try { fs.unlinkSync(ouput_txt);} catch (e) {}*/
+
+
+        try {fs.closeSync(fd_in);} catch (e) {console.log(e);}
+        try {fs.closeSync(fd_out);} catch (e) {console.log(e);}
+        try { fs.unlinkSync(input_file);} catch (e) {console.log(e);}
+        try { fs.unlinkSync(output_file);} catch (e) {console.log(e);}
+        try { fs.unlinkSync(output_txt);} catch (e) {console.log(e);}
+        
         callback(code, card, rule_card)
     });
 }
