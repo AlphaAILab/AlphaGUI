@@ -1,10 +1,11 @@
 'use strict'
 
-function Game(num_players, removed_cards) {
+function Game(num_players, removed_cards, score_0, score_1) {
     this.num_players = num_players;
     this.hands = new Array(num_players);
     this.palette = new Array(num_players);
     this.current_rule = 7;
+    this.duration = ""
     //this.log_string = "";
 
     var whole = []
@@ -30,6 +31,12 @@ function Game(num_players, removed_cards) {
             this.hands[player].push(whole.pop());
         }
     }
+
+    this.duration += score_0 + " " + score_1 + " \n";
+    this.duration += whole.length + " ";
+    for (var x of whole) this.duration += x + " ";
+    this.duration += "\n";
+
 
     //console.log(whole);
     //console.log(this.hands);
@@ -221,7 +228,30 @@ function _play(player, card, rule_card) {
         }
     }
 
+    this.duration += player + " " + rule_card + " " + card + "\n";
+
     return current_winning;
+}
+
+function _gen_input(player) {
+    var s = "";
+    s += this.num_players + " " + player + "\n";
+    s += this.current_rule  + "\n";
+
+    s += this.hands[player].length + " ";
+    for (var x of this.hands[player]) s += x + " ";
+    s += "\n"
+
+    for (var i = 0; i < this.num_players; i++) {
+        s += this.hands[i].length + "\n";
+
+        s += this.palette[i].length + " ";
+        for (var x of this.palette[i]) s += x + " ";
+        s += "\n";
+    }
+
+    s += this.duration;
+    return s;
 }
 
 Game.prototype = {
@@ -229,7 +259,8 @@ Game.prototype = {
     get_winner: _get_winner,
     get_player_highest: _get_player_highest,
     try_play: _try_play,
-    play: _play
+    play: _play,
+    gen_input: _gen_input
 }
 
 //Game(2, [11,12,13,14,15,16,17])
