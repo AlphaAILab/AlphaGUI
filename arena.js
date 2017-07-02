@@ -74,6 +74,9 @@ function select_card(cid){
     if(g.hands[A.gid].indexOf(cid)<0) return;
     console.log('choose'+cid);
     // todo
+    if(!$("#card"+cid).hasClass('card-select'))
+        $("#card"+cid).addClass('card-select');
+    else $("#card"+cid).removeClass('card-select');
 
 
 }
@@ -208,7 +211,7 @@ function start(){
             setTimeout(_do, 100);
         }
     }
-    setTimeout(_do, 100);
+    _do();
     
 }
 

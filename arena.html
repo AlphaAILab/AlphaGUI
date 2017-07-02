@@ -17,10 +17,25 @@
 
 
     <link href="./static/css/snackbar.min.css" rel="stylesheet">
-    
     <style>
+      .card-lg{
+          width:60px;
+          display: inline-block;
+          margin-left: 8px;
+      }
+      .card-sm{
+          width:30px;
+          height: 60px;
+          display: inline-block;
+          margin-left: 4px;
+      }
+      .card-select{
+          position:relative;
+          top: -20px;
+      }
     </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -29,13 +44,6 @@
     <div class = "well infobox" style="width: 96%; height:90%; margin: auto; margin-top: 3%;">
         <div class="row"> 
             <div class="col-sm-10">
-                <style>
-                    .card-lg{
-                        width:60px;
-                        display: inline-block;
-                        margin-left: 8px;
-                    }
-                 </style>
                  <div id="handB">
 
                   </div>
@@ -49,14 +57,6 @@
             </div>
         </div>
         <div class="row">
-            <style>
-                    .card-sm{
-                        width:30px;
-                        height: 60px;
-                        display: inline-block;
-                        margin-left: 4px;
-                    }
-                 </style>
                  <div id="paletteB"></div>
          </div>
         <div class="row text-warning" id="rule" style="height:100px;"></div>
