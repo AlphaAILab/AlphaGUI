@@ -21,6 +21,8 @@ B.roundtime = 20;
 var round_num=0;
 var start_time = 0;
 var _do_operation;
+var removed_cards = [];
+var round_wait_time = 3; // 两场间隔时间
 
 
 
@@ -71,10 +73,13 @@ function select_card(cid){
     if(!selectable) return;
     if(g.hands[A.gid].indexOf(cid)<0) return;
     console.log('choose'+cid);
+    // todo
+
 
 }
 
 
+// undo call this:
 function render_init(){
     $('#nameA').text(A.name);
     $('#nameB').text(B.name);
@@ -96,29 +101,33 @@ function show_win(winner){
 }
 
 function do_timeout(X,do_operation) {
+    $('#clock'+X.x).text('timeout!');
     if(X.type === 'remote' || X.type === 'bot' ){
-        // 刷个 00 红色的表
+        //不用干
     }else{
         do_operation(0, 0);
-    }
-    
+    }    
 }
 
+function getNow(){
+    var  _date = new Date();
+    return _date.getTime();
+}
 
 function start_clock(r,X,do_operation){
-    // end_time = now + X.roundtime;
+    var end_time = getNow() + X.roundtime * 1000;
     function update_clock(){
-        // 获取now
+        var now = getNow();
 
         if(round_num !== r){
-            $('#clock').text('');
+            $('#clock'+X.x).text('');
             return;
         }
         if(now> end_time){
             do_timeout(X,do_operation);
             return;
         }
-        // update end_time - now
+        $('#clock'+X.x).text((end_time-now)/1000);
         setTimeout(update_clock,100);
     }
     setTimeout( update_clock , 100);
@@ -126,6 +135,8 @@ function start_clock(r,X,do_operation){
 }
 
 function Run(X,nxtX){
+    console.log('Run '+X.gid);
+    var r = round_num;
 
     var do_operation = function(card,rule_card){
         if(r!==round_num) return;
@@ -134,8 +145,15 @@ function Run(X,nxtX){
         var ret = g.play(X.gid,card,rule_card);
         if(ret === false){
             show_win(nxtX);
-            nxtX.score += g.get_player_highest(nxtX.gid, 0);
+            var sc = 0;
+            var highest = g.get_player_highest(nxtX.gid, 0);
+            highest.map(function(x){
+                removed_cards.push(x);
+                sc += parseInt(x/10);
+            })
+            nxtX.score += sc;
             // 设置 start_time
+            start_time = getNow()+round_wait_time*1000;
             start();
         }else{
             //加动画 鲁棒的动画
@@ -144,6 +162,8 @@ function Run(X,nxtX){
         }
 
     }
+    
+    _do_operation = do_operation;
 
     // 开计时器
     // 如果是A并且human监听操作，
@@ -153,7 +173,6 @@ function Run(X,nxtX){
     if(X.type === "bot"){
         // my bot 操作
     }else if(X.type === "human"){
-        _do_operation = do_operation;
         selectable = true;
         
     }else if(X.type === "remote"){
@@ -170,21 +189,28 @@ function start(){
         return;
     }
 
-    // wangluo
-    
-    //wangluo end
-
-
     g = new Red7(2,[]);
     
-    /// start_time 处理 
-    render_init();
+    if(B.type === "remote"){
+        // wangluo
+    
+        //wangluo end
+    }
 
-    var current_gid = (g.get_winner()+1)%g.num_players;
-    if(current_gid === A.gid) Run(A,B);
-    else Run(B,A);
+    var _do = function() {
+        if(getNow()>start_time){
+            render_init();
+            var current_gid = (g.get_winner(0)+1)%g.num_players;
+            if(current_gid === A.gid) Run(A,B);
+            else Run(B,A);
+            return;
+        }else{
+            setTimeout(_do, 100);
+        }
+    }
+    setTimeout(_do, 100);
+    
 }
 
-// bind_card
 
 $(start);
