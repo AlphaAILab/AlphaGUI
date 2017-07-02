@@ -54,11 +54,11 @@ var rule={
 var img={
     7: "./static/img/max.png",
     6: "./static/img/333.png",
-    5: "./static/img/max.png",
-    4: "./static/img/max.png",
-    3: "./static/img/max.png",
-    2: "./static/img/max.png",
-    1: "./static/img/max.png"
+    5: "./static/img/samecolor.png",
+    4: "./static/img/246.png",
+    3: "./static/img/diffcolor.png",
+    2: "./static/img/345.png",
+    1: "./static/img/below4.png"
 }
 
 function arrcopy(ret,a){ // ret must be []
@@ -73,7 +73,7 @@ function hands2html(arr){
     for( var x of arr){
         var c = x%10;
         var n = parseInt(x/10);
-        ret+=`<div class="card-lg card-${color[c]} card-${n} well card-hand" id="card${x}" onclick="select_card(${x})"> <span>${n}</span> <br> <img src="./loading.svg" width="30px">   </div>`
+        ret+=`<div class="card-lg card-${color[c]} card-${n} well card-hand" id="card${x}" onclick="select_card(${x})"> <span>${n}</span> <br> <img src="${img[c]}" width="30px">   </div>`
     }
     return ret
 }
@@ -315,7 +315,7 @@ function Run(X,nxtX){
     // 如果B是remote,调网络库获取操作，并执行。
     start_clock(round_num,X,do_operation);
     if(X.type === "bot"){
-        var bot = new Bot("./trivial.exe");
+        var bot = new Bot("/Users/zrt/Documents/R7/red7_package_alpha_455006797/trivial");
         bot.run(g.gen_input(X.gid), X.roundtime * 1000, function (err, card, rule_card) {
             if (err !== 0) {
                 console.log("error: " + err);
