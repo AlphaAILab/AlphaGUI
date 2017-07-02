@@ -50,6 +50,15 @@ var rule={
     2:"CARDS THAT FORM A RUN",
     1:"MOST CARDS BELOW 4"
 };
+var img={
+    7: "./static/img/max.png",
+    6: "./static/img/333.png",
+    5: "./static/img/max.png",
+    4: "./static/img/max.png",
+    3: "./static/img/max.png",
+    2: "./static/img/max.png",
+    1: "./static/img/max.png"
+}
 
 function arrcopy(ret,a){ // ret must be []
     for(var x of a){
@@ -290,7 +299,7 @@ function Run(X,nxtX){
             start();
         }else{
             //加动画 鲁棒的动画
-
+            render_init();
             Run(nxtX,X);
         }
 
