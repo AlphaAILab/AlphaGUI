@@ -155,6 +155,8 @@ function Run(X,nxtX){
                 sc += parseInt(x/10);
             })
             nxtX.score += sc;
+            $('#scoreA').text(A.score);
+            $('#scoreB').text(B.score);
             // 设置 start_time
             start_time = getNow()+round_wait_time*1000;
             start();
