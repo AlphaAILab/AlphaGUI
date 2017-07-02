@@ -315,7 +315,7 @@ function Run(X,nxtX){
     // 如果B是remote,调网络库获取操作，并执行。
     start_clock(round_num,X,do_operation);
     if(X.type === "bot"){
-        var bot = new Bot("/Users/zrt/Documents/R7/red7_package_alpha_455006797/trivial");
+        var bot = new Bot("./trivial");
         bot.run(g.gen_input(X.gid), X.roundtime * 1000, function (err, card, rule_card) {
             if (err !== 0) {
                 console.log("error: " + err);
@@ -349,7 +349,9 @@ function start(){
         return;
     }
 
-    g = new Red7(2,[]);
+    if (A.gid === 0) [score_0, score_1] = [A.score, B.score];
+    else [score_1, score_0] = [A.score, B.score];
+    g = new Red7(2, removed_cards, score_0, score_1);
     
     if(B.type === "remote"){
         // wangluo
