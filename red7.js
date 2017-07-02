@@ -19,6 +19,11 @@ function Game(num_players, removed_cards, score_0, score_1) {
         }
     }
 
+    this.duration += score_0 + " " + score_1 + " \n";
+    this.duration += whole.length + " ";
+    for (var x of whole) this.duration += x + " ";
+    this.duration += "\n";
+
     for (var i = 0; i < whole.length; i++) {
         var x = Math.floor(Math.random() * (i+1));
         [whole[x], whole[i]] = [whole[i], whole[x]];
@@ -31,12 +36,6 @@ function Game(num_players, removed_cards, score_0, score_1) {
             this.hands[player].push(whole.pop());
         }
     }
-
-    this.duration += score_0 + " " + score_1 + " \n";
-    this.duration += whole.length + " ";
-    for (var x of whole) this.duration += x + " ";
-    this.duration += "\n";
-
 
     //console.log(whole);
     //console.log(this.hands);
