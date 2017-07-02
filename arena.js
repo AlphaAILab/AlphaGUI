@@ -17,7 +17,7 @@ B.score=39;
 A.type = "human"
 B.type = "bot"
 // remote
-A.roundtime = 60;
+A.roundtime = 100;
 B.roundtime = 20;
 var round_num=0;
 var start_time = 0;
@@ -26,6 +26,7 @@ var removed_cards = [];
 var round_wait_time = 3; // 两场间隔时间
 var _cid; // active cid
 var _card,_rule_card; // active cards
+var hideB = true; // hide op
 
 
 // 自己是A
@@ -58,13 +59,18 @@ function arrcopy(ret,a){ // ret must be []
     }
 }
 
-function hands2html(arr){
+function hands2html(arr, hide){
     if(typeof(arr) === 'number') arr = g.hands[arr];
     var ret=""
     for( var x of arr){
         var c = x%10;
         var n = parseInt(x/10);
-        ret+=`<div class="card-lg card-${color[c]} card-${n}  card-hand" id="card${x}" onclick="select_card(${x})" style="width:60px;"> <img src="./static/img/cards/${x}.png" width=100%>   </div>`
+        if(hide === true){
+            ret+=`<div class="card-lg card-${color[c]} card-${n}  card-hand" id="card${x}" onclick="select_card(${x})" style="width:60px;"> <img src="./static/img/hide.png" width=100%>   </div>`
+        }else{
+            ret+=`<div class="card-lg card-${color[c]} card-${n}  card-hand" id="card${x}" onclick="select_card(${x})" style="width:60px;"> <img src="./static/img/cards/${x}.png" width=100%>   </div>`
+        }
+        
     }
     return ret
 }
@@ -220,7 +226,7 @@ function render_init(){
 // 是否要给牌排序
     
     $("#handA").html(hands2html(A.gid));
-    $("#handB").html(hands2html(B.gid));
+    $("#handB").html(hands2html(B.gid,hideB));
 
     $("#paletteA").html(palette2html(A.gid));
     $('#paletteB').html(palette2html(B.gid));
