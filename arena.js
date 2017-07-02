@@ -27,6 +27,7 @@ var round_wait_time = 3; // 两场间隔时间
 var _cid; // active cid
 var _card,_rule_card; // active cards
 var hideB = true; // hide op
+var last_rule_card=0;
 
 
 // 自己是A
@@ -53,13 +54,22 @@ var rule={
     1:"MOST CARDS BELOW 4"
 };
 
+var rule_color={
+    7:"rgb(203,38,59)",
+    6:"rgb(253,166,79)",
+    5:"rgb(245,224,58)",
+    4:"rgb(66,173,51)",
+    3:"rgb(83,208,252)",
+    2:"rgb(48,130,200)",
+    1: "rgb(126,72,191)"
+};
 function arrcopy(ret,a){ // ret must be []
     for(var x of a){
         ret.push(x);
     }
 }
 
-function hands2html(arr, hide){
+function hands2html(arr, hide, selectable){
     if(typeof(arr) === 'number') arr = g.hands[arr];
     var ret=""
     for( var x of arr){
@@ -68,7 +78,12 @@ function hands2html(arr, hide){
         if(hide === true){
             ret+=`<div class="card-lg card-${color[c]} card-${n}  card-hand" id="card${x}" onclick="select_card(${x})" style="width:60px;"> <img src="./static/img/hide.png" width=100%>   </div>`
         }else{
-            ret+=`<div class="card-lg card-${color[c]} card-${n}  card-hand" id="card${x}" onclick="select_card(${x})" style="width:60px;"> <img src="./static/img/cards/${x}.png" width=100%>   </div>`
+            if(selectable === true){
+                ret+=`<div class="card-lg card-${color[c]} card-${n}  card-hand" id="card${x}" onclick="select_card(${x})" style="width:60px;cursor:pointer;"> <img src="./static/img/cards/${x}.png" width=100%>   </div>`
+            }else{
+                ret+=`<div class="card-lg card-${color[c]} card-${n}  card-hand" id="card${x}" onclick="select_card(${x})" style="width:60px;cursor:default;"> <img src="./static/img/cards/${x}.png" width=100%>   </div>`
+            }
+            
         }
         
     }
@@ -136,7 +151,7 @@ function click_card(){
     arrcopy(palette,g.palette[A.gid]);
     if(_card > 0) palette.push(_card);
     $('#paletteA').html(palette2html(palette));
-    $('#handA').html(hands2html(hands));
+    $('#handA').html(hands2html(hands, false, selectable));
     // 动画
     if(g.try_play(A.gid,_card,_rule_card)){
         activebtn('#play');
@@ -171,8 +186,9 @@ function click_rule(){
     arrcopy(palette,g.palette[A.gid]);
     if(_card > 0) palette.push(_card);
     $('#paletteA').html(palette2html(palette));
-    $('#handA').html(hands2html(hands));
-    $('#rule').html(`${rule[_rule_card%10]}`)
+    $('#handA').html(hands2html(hands,false,selectable));
+    $('#rule').html(`<div><img src="./static/img/cards/${_rule_card}.png" height=40px> </div>`+`<div class="rule-text">${rule[_rule_card%10]}</div>`)
+    $('#rule').css('color',rule_color[_rule_card%10])
     // 动画
     if(g.try_play(A.gid,_card,_rule_card)){
         activebtn('#play');
@@ -225,13 +241,14 @@ function render_init(){
     $('#scoreB').text(B.score);
 // 是否要给牌排序
     
-    $("#handA").html(hands2html(A.gid));
-    $("#handB").html(hands2html(B.gid,hideB));
+    $("#handA").html(hands2html(A.gid,false,selectable));
+    $("#handB").html(hands2html(B.gid,hideB,false));
 
     $("#paletteA").html(palette2html(A.gid));
     $('#paletteB').html(palette2html(B.gid));
     
-    $('#rule').html(`${rule[g.current_rule]}`)
+    $('#rule').html(`<div><img src="./static/img/cards/${last_rule_card}.png" height=40px> </div>`+`<div class="rule-text">${rule[g.current_rule]}</div>`)
+    $('#rule').css('color',rule_color[g.current_rule])
 }
 
 function show_win(winner){
@@ -266,10 +283,10 @@ function start_clock(r,X,do_operation){
             do_timeout(X,do_operation);
             return;
         }
-        $('#clock'+X.x).text((end_time-now)/1000);
-        setTimeout(update_clock,100);
+        $('#clock'+X.x).text(parseInt((end_time-now)/1000));
+        setTimeout(update_clock,200);
     }
-    setTimeout( update_clock , 100);
+    setTimeout( update_clock , 0);
 
 }
 
@@ -298,6 +315,7 @@ function Run(X,nxtX){
             start();
         }else{
             //加动画 鲁棒的动画
+            if(rule_card>0) last_rule_card = rule_card;
             render_init();
             Run(nxtX,X);
         }
@@ -324,6 +342,7 @@ function Run(X,nxtX){
         });
     }else if(X.type === "human"){
         selectable = true;
+        render_init();
         _card = _rule_card = 0 ;
         _hands = [];
         arrcopy(_hands,g.hands[X.gid]);
@@ -349,6 +368,9 @@ function start(){
     if (A.gid === 0) [score_0, score_1] = [A.score, B.score];
     else [score_1, score_0] = [A.score, B.score];
     g = new Red7(2, removed_cards, score_0, score_1);
+    last_rule_card = 0;
+    _cid=0;
+    _card = _rule_card =0;
     
     if(B.type === "remote"){
         // wangluo
