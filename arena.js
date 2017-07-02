@@ -51,15 +51,6 @@ var rule={
     2:"CARDS THAT FORM A RUN",
     1:"MOST CARDS BELOW 4"
 };
-var img={
-    7: "./static/img/max.png",
-    6: "./static/img/333.png",
-    5: "./static/img/samecolor.png",
-    4: "./static/img/246.png",
-    3: "./static/img/diffcolor.png",
-    2: "./static/img/345.png",
-    1: "./static/img/below4.png"
-}
 
 function arrcopy(ret,a){ // ret must be []
     for(var x of a){
@@ -73,7 +64,7 @@ function hands2html(arr){
     for( var x of arr){
         var c = x%10;
         var n = parseInt(x/10);
-        ret+=`<div class="card-lg card-${color[c]} card-${n} well card-hand" id="card${x}" onclick="select_card(${x})"> <span>${n}</span> <br> <img src="${img[c]}" width="30px">   </div>`
+        ret+=`<div class="card-lg card-${color[c]} card-${n}  card-hand" id="card${x}" onclick="select_card(${x})" style="width:60px;"> <img src="./static/img/cards/${x}.png" width=100%>   </div>`
     }
     return ret
 }
@@ -84,7 +75,7 @@ function palette2html(arr){
     for(var x of arr ){
         var c = x%10;
         var n = parseInt(x/10);
-        ret+=`<div class="card-sm card-${color[c]} card-${n} well card-palette" id="card${x}"> <span>${n}</span> <br> <img src="./loading.svg" width="15px">   </div>`
+        ret+=`<div class="card-sm card-${color[c]} card-${n} card-palette" id="card${x}" style="width:40px;"> <img src="./static/img/cards-sm/${x}.png" width=100%></div>`
     }
     return ret
 }
