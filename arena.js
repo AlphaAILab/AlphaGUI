@@ -16,7 +16,7 @@ B.score=39;
 A.type = "human"
 B.type = "bot"
 // remote
-A.roundtime = 20;
+A.roundtime = 60;
 B.roundtime = 20;
 var round_num=0;
 var start_time = 0;
@@ -89,15 +89,24 @@ function disablebtn(btn){
 
 }
 
-function click_play(){
-    console.log('click play '+_card+' '+_rule_card);
-    $('#op-pan').hide();
-    _do_operation(_card,_rule_card);
+function click_withdraw(){
+    console.log('withdraw');
     render_init();
     disablebtn('#play');
     disablebtn('#play-card');
     disablebtn('#play-rule');
     disablebtn('#undo');
+    _do_operation(0,0);
+}
+function click_play(){
+    console.log('click play '+_card+' '+_rule_card);
+    $('#op-pan').hide();
+    render_init();
+    disablebtn('#play');
+    disablebtn('#play-card');
+    disablebtn('#play-rule');
+    disablebtn('#undo');
+    _do_operation(_card,_rule_card);
 }
 
 function click_card(){
