@@ -23,10 +23,12 @@ var start_time = 0;
 var _do_operation;
 var removed_cards = [];
 var round_wait_time = 3; // 两场间隔时间
-
+var _cid; // active cid
+var _card,_rule_card; // active cards
 
 
 // 自己是A
+
 
 
 
@@ -49,9 +51,16 @@ var rule={
     1:"MOST CARDS BELOW 4"
 };
 
-function hands2html(gid){
+function arrcopy(ret,a){ // ret must be []
+    for(var x of a){
+        ret.push(x);
+    }
+}
+
+function hands2html(arr){
+    if(typeof(arr) === 'number') arr = g.hands[arr];
     var ret=""
-    for( var x of g.hands[gid]){
+    for( var x of arr){
         var c = x%10;
         var n = parseInt(x/10);
         ret+=`<div class="card-lg card-${color[c]} card-${n} well card-hand" id="card${x}" onclick="select_card(${x})"> <span>${n}</span> <br> <img src="./loading.svg" width="30px">   </div>`
@@ -59,9 +68,10 @@ function hands2html(gid){
     return ret
 }
 
-function palette2html(gid){
+function palette2html(arr){
+    if(typeof(arr) === 'number') arr = g.palette[arr];
     var ret=""
-    for(var x of g.palette[gid]){
+    for(var x of arr ){
         var c = x%10;
         var n = parseInt(x/10);
         ret+=`<div class="card-sm card-${color[c]} card-${n} well card-palette" id="card${x}"> <span>${n}</span> <br> <img src="./loading.svg" width="15px">   </div>`
@@ -69,20 +79,128 @@ function palette2html(gid){
     return ret
 }
 
-function select_card(cid){
-    if(!selectable) return;
-    if(g.hands[A.gid].indexOf(cid)<0) return;
-    console.log('choose'+cid);
-    // todo
-    if(!$("#card"+cid).hasClass('card-select'))
-        $("#card"+cid).addClass('card-select');
-    else $("#card"+cid).removeClass('card-select');
+function activebtn(btn){
+    $(btn).removeClass('disabled');
+    $(btn).addClass('btn-raised');
+}
+function disablebtn(btn){
+    $(btn).addClass('disabled');
+    $(btn).removeClass('btn-raised');
+
+}
+
+function click_play(){
+    console.log('click play '+_card+' '+_rule_card);
+    $('#op-pan').hide();
+    _do_operation(_card,_rule_card);
+    render_init();
+    disablebtn('#play');
+    disablebtn('#play-card');
+    disablebtn('#play-rule');
+    disablebtn('#undo');
+}
+
+function click_card(){
+    console.log('click play '+_cid);
+    _card = _cid;
+    if(_card === _rule_card){
+        _rule_card = 0;
+    }
+    var hands = [];
+    arrcopy(hands,g.hands[A.gid]);
+    var pos = hands.indexOf(_card);
+    if(pos>=0){
+        hands.splice(pos,1);
+    }
+    pos = hands.indexOf(_rule_card);
+    if(pos>=0){
+        hands.splice(pos,1);
+    }
+    var palette = [];
+    arrcopy(palette,g.palette[A.gid]);
+    if(_card > 0) palette.push(_card);
+    $('#paletteA').html(palette2html(palette));
+    $('#handA').html(hands2html(hands));
+    // 动画
+    if(g.try_play(A.gid,_card,_rule_card)){
+        activebtn('#play');
+    }else{
+        disablebtn('#play')
+    }
+    activebtn('#undo');
+    disablebtn('#play-card');
+    disablebtn('#play-rule');
 
 
 }
 
 
-// undo call this:
+function click_rule(){
+    console.log('click rule '+_cid);
+    _rule_card = _cid;
+    if(_card === _rule_card){
+        _card = 0;
+    }
+    var hands = [];
+    arrcopy(hands,g.hands[A.gid]);
+    var pos = hands.indexOf(_card);
+    if(pos>=0){
+        hands.splice(pos,1);
+    }
+    pos = hands.indexOf(_rule_card);
+    if(pos>=0){
+        hands.splice(pos,1);
+    }
+    var palette = [];
+    arrcopy(palette,g.palette[A.gid]);
+    if(_card > 0) palette.push(_card);
+    $('#paletteA').html(palette2html(palette));
+    $('#handA').html(hands2html(hands));
+    $('#rule').html(`${rule[_rule_card%10]}`)
+    // 动画
+    if(g.try_play(A.gid,_card,_rule_card)){
+        activebtn('#play');
+    }else{
+        disablebtn('#play')
+    }
+    activebtn('#undo');
+    disablebtn('#play-card');
+    disablebtn('#play-rule');
+    
+}
+
+
+function click_undo(){
+    console.log('click undo '+_cid);
+    render_init();
+    disablebtn('#play');
+    disablebtn('#play-card');
+    disablebtn('#play-rule');
+    disablebtn('#undo');
+}
+
+function select_card(cid){
+    if(!selectable) return;
+    if(g.hands[A.gid].indexOf(cid)<0) return;
+    console.log('choose'+cid);
+    _cid = cid;
+    // todo
+    if(!$("#card"+cid).hasClass('card-select')){
+        $(".card-hand").removeClass('card-select');
+        $("#card"+cid).addClass('card-select');
+        activebtn('#play-card');
+        activebtn('#play-rule');
+
+    }else{
+        $("#card"+cid).removeClass('card-select');
+        disablebtn('#play-card');
+        disablebtn('#play-rule');
+
+    }
+}
+
+
+
 function render_init(){
     $('#nameA').text(A.name);
     $('#nameB').text(B.name);
@@ -108,6 +226,7 @@ function do_timeout(X,do_operation) {
     if(X.type === 'remote' || X.type === 'bot' ){
         //不用干
     }else{
+        render_init();
         do_operation(0, 0);
     }    
 }
@@ -179,6 +298,12 @@ function Run(X,nxtX){
         // my bot 操作
     }else if(X.type === "human"){
         selectable = true;
+        _card = _rule_card = 0 ;
+        _hands = [];
+        arrcopy(_hands,g.hands[X.gid]);
+        _palette = [];
+        arrcopy(_palette,g.hands[X.gid]);
+        $('#op-pan').show();
         
     }else if(X.type === "remote"){
         // 类似mybot
@@ -187,6 +312,7 @@ function Run(X,nxtX){
 }
 
 function start(){
+    $('#op-pan').hide();
     if(A.score >= 40 || B.score >=40){
         //处理获胜。
         console.log('获胜');
