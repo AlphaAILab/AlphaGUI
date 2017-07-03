@@ -19,6 +19,17 @@
     <link href="./static/css/snackbar.min.css" rel="stylesheet">
     
     <style>
+    #back{
+        position: absolute;
+        /*top:300px;*/
+        bottom: 10px;
+        left: 20px;
+      }
+      body{
+        -webkit-user-select: none;
+        user-select: none;
+        cursor:default;
+      }
     </style>
 </head>
 <body>
@@ -42,6 +53,8 @@
 
 </div>
 
+
+<a id="back" class="btn btn-raised btn-primary" href="#" onclick="javascript:history.back(1);"><i class="material-icons">arrow_back</i> </a>
 
 <script>window.$ = window.jQuery = require('./static/js/jquery.min');</script>
 

@@ -31,7 +31,13 @@
       #title h1 {
         font-size: 7em;
       }
+      body{
+        -webkit-user-select: none;
+        user-select: none;
+        cursor:default;
+      }
     </style>
+    
 </head>
 <body>
 
@@ -49,13 +55,13 @@
     <div class="row">
         <div class="col-sm-12  text-center" id = "menu">
             <div>
-            <a class="btn btn-raised btn-info" >Start Game</a>
+            <a href="./matching.html" class="btn btn-raised btn-info" >Start Game</a>
             </div>
             <div>
-            <a class="btn btn-raised btn-success">My AI</a>
+            <a href="./myai.html" class="btn btn-raised btn-success">My AI</a>
             </div>
             <div>
-            <a class="btn btn-raised btn-danger">Lab</a>
+            <a href="./lab.html" class="btn btn-raised btn-danger">Lab</a>
             </div>
         </div>
     </div>
@@ -64,13 +70,6 @@
 
 <script src="./static/js/bootstrap.min.js"></script>
 <script>
-  // $();
-
-  // $(function(){
-  // setInterval(function() {
-  //   alert(localStorage.getItem("myCat"));
-  // }, 2000)
-  // });
   
   (function () {
 
