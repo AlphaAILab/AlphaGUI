@@ -236,8 +236,8 @@ function select_card(cid){
 
 
 function render_init(){
-    $('#nameA').text(A.name);
-    $('#nameB').text(B.name);
+    $('#nameA').html(A.name);
+    $('#nameB').html(B.name);
     $('#scoreA').text(A.score);
     $('#scoreB').text(B.score);
 // 是否要给牌排序
@@ -284,7 +284,7 @@ function start_clock(r,X,do_operation){
             do_timeout(X,do_operation);
             return;
         }
-        $('#clock'+X.x).text(parseInt((end_time-now)/1000));
+        $('#clock'+X.x).html('<div style="margin-right:5px;"><i class="material-icons">alarm</i></div>'+'<div style="font-size:1.2em;">'+parseInt((end_time-now)/1000)+'</div>');
         setTimeout(update_clock,200);
     }
     setTimeout( update_clock , 0);
