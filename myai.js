@@ -6,6 +6,7 @@ var now_page=1;
 var botlist=[];
 var per_page = 5;
 var select_bot = -1;
+var snackbar_time = 3000;
 
 function getNow(){
     var  _date = new Date();
@@ -26,7 +27,7 @@ function bot2html(bots){
     var s='';
     for(var bot of bots){
         console.log(escape(bot.bot_path))
-        s+=`<div class="list-group-item" id="bot${bot.botid}" onclick="javascript:click_bot(${bot.botid});">`
+        s+=`<div class="list-group-item" style="cursor:pointer;" id="bot${bot.botid}" onclick="javascript:click_bot(${bot.botid});">`
         s+=`<div class="row-content">`;
         s+=`<div class="least-content">${bot.created_time}</div>`
         s+=`<h4 class="list-group-item-heading">${bot.name}</h4>`
@@ -51,7 +52,7 @@ function click_save_ai(){
         var options =  {
             content: "Name error! /^[0-9a-zA-Z]{5,20}$/", 
             style: "toast", 
-            timeout: 0 
+            timeout: snackbar_time
         }
         $.snackbar(options);
         return;
@@ -62,7 +63,7 @@ function click_save_ai(){
         var options =  {
             content: "Path error!", 
             style: "toast", 
-            timeout: 0 
+            timeout: snackbar_time 
         }
         $.snackbar(options);
         return;
@@ -80,7 +81,7 @@ function click_save_ai(){
     $.snackbar({
         content: "Testing AI...",
         style: "toast",
-        timeout:0
+        timeout: snackbar_time
     })
     // bot.test
     // call back ok and below
@@ -89,7 +90,7 @@ function click_save_ai(){
     $.snackbar({
         content: "Saving AI...",
         style: "toast",
-        timeout:0
+        timeout: snackbar_time
     })
     // call back saved and below
 
@@ -97,10 +98,17 @@ function click_save_ai(){
     save_botlist();
     now_page = 1;
     render_init();
-    
+    select_bot = 0;
+    render_right(bot);
 
 }
-
+function clear_right(){
+    $('#group1').hide();
+    $('#group2').hide();
+    $('#group3').hide();
+    $('#btns').html('');
+    $('#title').text('Select or ADD an AI');
+}
 function click_add_ai(){
     $('#inputName').val('')
     $('#title').text('ADD an AI');
@@ -142,8 +150,10 @@ function click_delete_ai(){
     $.snackbar({
         content: "Deleted.",
         style: "toast",
-        timeout:0
+        timeout:snackbar_time
     })
+    select_bot = -1;
+    clear_right();
     render_init();
 }
 function render_right(bot){
@@ -166,6 +176,7 @@ function click_bot(bot){
 }
 
 function render_init(){
+    select_bot = -1;
     $('#showbot').html(bot2html(botlist.slice((now_page-1)*per_page,now_page*per_page)));
     $('#page').html(page2html(now_page));
 }
