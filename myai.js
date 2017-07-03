@@ -30,7 +30,7 @@ function bot2html(bots){
         s+=`<div class="row-content">`;
         s+=`<div class="least-content">${bot.created_time}</div>`
         s+=`<h4 class="list-group-item-heading">${bot.name}</h4>`
-        s+=`<p class="list-group-item-text">path: ${bot.bot_path}<br/>${bot.win}/${bot.play_num}</p></div></div>`
+        s+=`<p class="list-group-item-text"><nobr>path: ${bot.bot_path}</nobr><br/>${bot.win}/${bot.play_num}</p></div></div>`
         s+=`<div class="list-group-separator"></div>`
     }
 
