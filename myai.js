@@ -37,6 +37,9 @@ function bot2html(bots){
     return s;
 }
 function save_botlist(){
+    for(var x in botlist){
+        botlist[x].botid=x;
+    }
     localStorage.setItem('botlist',JSON.stringify(botlist));
 }
 
@@ -91,9 +94,6 @@ function click_save_ai(){
     // call back saved and below
 
     botlist.splice(0,0,bot);
-    for(var x in botlist){
-        botlist[x].botid=x;
-    }
     save_botlist();
     now_page = 1;
     render_init();
