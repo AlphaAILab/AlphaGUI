@@ -259,7 +259,8 @@ Game.prototype = {
     get_player_highest: _get_player_highest,
     try_play: _try_play,
     play: _play,
-    gen_input: _gen_input
+    gen_input: _gen_input,
+    get_top: _get_top
 }
 
 //Game(2, [11,12,13,14,15,16,17])

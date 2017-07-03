@@ -93,11 +93,19 @@ function hands2html(arr, hide, selectable){
 
 function palette2html(arr){
     if(typeof(arr) === 'number') arr = g.palette[arr];
+    var rule = _rule_card || last_rule_card || 77;
+    rule = rule % 10;
+    highest = g.get_top[rule](arr);
+    console.log('rule:'+rule + ' '+highest)
     var ret=""
     for(var x of arr ){
         var c = x%10;
         var n = parseInt(x/10);
-        ret+=`<div class="card-sm card-${color[c]} card-${n} card-palette" id="card${x}" style="width:40px;"> <img src="./static/img/cards-sm/${x}.png" width=100%></div>`
+        var highlight = '';
+        if(highest.indexOf(x) >= 0){
+            highlight = 'highlight';
+        }
+        ret+=`<div class="card-sm card-${color[c]} card-${n} card-palette ${highlight}" id="card${x}" style="width:40px;"> <img src="./static/img/cards-sm/${x}.png" width=100%></div>`
     }
     return ret
 }
@@ -152,6 +160,7 @@ function click_card(){
     arrcopy(palette,g.palette[A.gid]);
     if(_card > 0) palette.push(_card);
     $('#paletteA').html(palette2html(palette));
+    $('#paletteB').html(palette2html(g.palette[B.gid]));
     $('#handA').html(hands2html(hands, false, selectable));
     // 动画
     if(g.try_play(A.gid,_card,_rule_card)){
@@ -187,6 +196,7 @@ function click_rule(){
     arrcopy(palette,g.palette[A.gid]);
     if(_card > 0) palette.push(_card);
     $('#paletteA').html(palette2html(palette));
+    $('#paletteB').html(palette2html(g.palette[B.gid]));
     $('#handA').html(hands2html(hands,false,selectable));
     $('#rule').html(`<div><img src="./static/img/cards/${_rule_card}.png" height=40px> </div>`+`<div class="rule-text">${rule[_rule_card%10]}</div>`)
     $('#rule').css('color',rule_color[_rule_card%10])
@@ -205,12 +215,12 @@ function click_rule(){
 
 function click_undo(){
     console.log('click undo '+_cid);
+    _card = _rule_card = 0;
     render_init();
     disablebtn('#play');
     disablebtn('#play-card');
     disablebtn('#play-rule');
     disablebtn('#undo');
-    _card = _rule_card = 0;
 }
 
 function select_card(cid){
