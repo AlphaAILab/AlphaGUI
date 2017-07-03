@@ -34,6 +34,9 @@ var backparam = {}
 
 var game_type;
 // 自己是A
+// 排序
+// 观战
+
 
 
 
