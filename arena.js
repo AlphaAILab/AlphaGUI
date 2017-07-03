@@ -30,7 +30,9 @@ var hideB = true; // hide op
 var last_rule_card=0;
 var AI_wait_time = 100; // 毫秒
 
+var backparam = {}
 
+var game_type;
 // 自己是A
 
 
@@ -64,6 +66,17 @@ var rule_color={
     2:"rgb(48,130,200)",
     1: "rgb(126,72,191)"
 };
+function getUrlVar(key){
+	var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
+	return result && unescape(result[1]) || ""; 
+}
+
+function testurl(key){
+    var ret = getUrlVar(key);
+    if(ret === "") return false;
+    else return true;
+}
+
 function arrcopy(ret,a){ // ret must be []
     for(var x of a){
         ret.push(x);
@@ -341,14 +354,14 @@ function Run(X,nxtX){
     // 如果B是remote,调网络库获取操作，并执行。
     start_clock(round_num,X,do_operation);
     if(X.type === "bot"){
-        var bot = new Bot("./trivial");
+        var bot = new Bot(B.bot_path);
         bot.run(g.gen_input(X.gid), X.roundtime * 1000, function (err, card, rule_card) {
             if (err !== 0) {
                 console.log("error: " + err);
             }
             console.log("do opearation card = " + card + "\trule_card = " + rule_card);
             setTimeout(function () {
-                do_operation(card, rule_card);
+                _do_operation(card, rule_card);
             }, AI_wait_time);
         });
     }else if(X.type === "human"){
@@ -371,6 +384,16 @@ function start(){
     $('#op-pan').hide();
     if(A.score >= 40 || B.score >=40){
         //处理获胜。
+        var winner;
+        if(A.score>B.score){
+            winner =A;
+        }else winner = B;
+        $('#rule').text(winner.name + ' win this game!');
+
+        setTimeout(function() {
+            location.href = './matching.html?'+$.param(backparam);
+        }, 5000);
+
         console.log('获胜');
         
         return;
@@ -403,6 +426,70 @@ function start(){
     _do();
     
 }
+function receive(){
+    var url = testurl('url');
+    if(url){
+        game_type = getUrlVar('game_type');
+        if(game_type === 'human_ai'){
+            A.name = getUrlVar('Aname');
+            B.name = getUrlVar('Bname');
+            A.gid = parseInt(getUrlVar('Agid'))
+            B.gid = parseInt(getUrlVar('Bgid'));
+            A.roundtime =parseInt(getUrlVar('Aroundtime'));
+            B.roundtime = parseInt(getUrlVar('Broundtime'));
+            AI_wait_time = parseInt(getUrlVar('AIwaittime'));
+            var _hideB = getUrlVar('hideB');
+            if(_hideB === "true") hideB = true;
+            else if(_hideB === "false") hideB = false;
+            else{
+                console.log('[!] _hideB: ',_hideB);
+            }
+            A.type = "human";
+            B.type = "bot";
+            var botid = parseInt(getUrlVar("Bbotid"));
+            var botlist = JSON.parse(localStorage.getItem('botlist'));
+            B.bot_path = botlist[botid].bot_path;
 
+            // back
+            backparam.myid = A.name;
+            backparam.A_is_human = 'aaa';
+            backparam.B_is_ai = 'aaa';
+            backparam.B_ai_id = botid;
 
+        }else if(game_type === 'ai_ai'){
+            A.name = getUrlVar('Aname');
+            B.name = getUrlVar('Bname');
+            A.gid = parseInt(getUrlVar('Agid'))
+            B.gid = parseInt(getUrlVar('Bgid'));
+            A.roundtime =parseInt(getUrlVar('Aroundtime'));
+            B.roundtime = parseInt(getUrlVar('Broundtime'));
+            AI_wait_time = parseInt(getUrlVar('AIwaittime'));
+            var _hideB = getUrlVar('hideB');
+            if(_hideB === "true") hideB = true;
+            else if(_hideB === "false") hideB = false;
+            else{
+                console.log('[!] _hideB: ',_hideB);
+            }
+            A.type = "bot";
+            B.type = "bot";
+            var Abotid = parseInt(getUrlVar("Abotid"));
+            var Bbotid = parseInt(getUrlVar("Bbotid"));
+            var botlist = JSON.parse(localStorage.getItem('botlist'));
+            A.bot_path = botlist[Abotid].bot_path;
+            B.bot_path = botlist[Bbotid].bot_path;
+
+            backparam.myid = getUrlVar('myid');
+            backparam.A_is_ai = 'aaa';
+            backparam.A_ai_id = Abotid;
+            backparam.B_is_ai = 'aaa';
+            backparam.B_ai_id = Bbotid;
+            
+
+        }
+        
+
+    }
+}
+
+$(receive);
 $(start);

@@ -19,6 +19,17 @@
     <link href="./static/css/snackbar.min.css" rel="stylesheet">
     
     <style>
+    #back{
+        position: absolute;
+        /*top:300px;*/
+        bottom: 10px;
+        left: 20px;
+      }
+      body{
+        -webkit-user-select: none;
+        user-select: none;
+        cursor:default;
+      }
     </style>
 </head>
 <body>
@@ -27,21 +38,35 @@
 <div class = "row">
   <div class = "col-sm-6">
     <div class = "well infobox" style="width: 90%; height:70%; margin: auto; margin-top: 5%;">
+      <h2 id="Aid"></h2>
+      <div class="text-center"> 
+      <a  class="btn btn-info btn-raised" style="margin-top:60px;width:200px;" onclick="click_human();">Human Wisdom </a>
+      <a  class="btn btn-primary btn-raised" style="margin-top:20px;width:200px;" onclick="click_A_ai();">USE AI </a> 
+      <a  class="btn btn-success disabled" style="margin-top:20px;width:200px;">Current: <span id="Acur"></span></a>
+      </div>
     </div>
   </div>
 
   <div class = "col-sm-6">
     <div class = "well infobox" style="width: 90%; height:70%; margin: auto; margin-top: 5%;">
+      <h2 id="Bid"></h2>
+      <div class="text-center"> 
+      <a  class="btn btn-info btn-raised" style="margin-top:60px;width:200px;" onclick="click_remote();">ONLINE PLAY </a>
+      <a  class="btn btn-primary btn-raised" style="margin-top:20px;width:200px;" onclick="click_B_ai();"> USE LOCAL AI </a> 
+      <a class="btn btn-success disabled" style="margin-top:20px;width:200px;">Current: <span id="Bcur"></span></a>
+      </div>
     </div>
   </div>
 </div>
 
 <div class = "row text-center">
-  <a class="btn btn-raised btn-success" style="margin-top: 5%">Play</a>
+  <a class="btn btn-raised btn-success" style="margin-top: 5%" id = "play">Play</a>
 </div>
 
 </div>
 
+
+<a id="back" class="btn btn-raised btn-primary"  href="./home.html"><i class="material-icons">arrow_back</i> </a>
 
 <script>window.$ = window.jQuery = require('./static/js/jquery.min');</script>
 
@@ -136,5 +161,6 @@
     });
   });
 </script>
+<script src="./matching.js"> </script>
 </body>
 </html>
