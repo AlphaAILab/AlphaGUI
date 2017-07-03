@@ -60,9 +60,9 @@ function click_save_ai(){
 
     var ai_name = $('#inputName').val();
     var ai_path = '';
-    if(!/^[0-9a-zA-Z]{3,12}$/.test(ai_name)){
+    if(!/^[0-9a-zA-Z_]{3,12}$/.test(ai_name)){
         var options =  {
-            content: "Name error! /^[0-9a-zA-Z]{3,12}$/", 
+            content: "Name error! /^[0-9a-zA-Z_]{3,12}$/", 
             style: "toast", 
             timeout: snackbar_time
         }
