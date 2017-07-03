@@ -18,7 +18,9 @@
     "bootstrap-material-design": "^0.5.10",
     "electron": "^1.6.11",
     "electron-packager": "^8.7.2",
+    "express": "^4.15.3",
     "jquery": "^3.2.1",
-    "socket.io": "^2.0.3"
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3"
   }
 }
