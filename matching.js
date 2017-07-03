@@ -29,7 +29,7 @@ function testurl(key){
 
 // debug
 // if(!getUrlVar('myID')){
-//     window.location.search = 'myID=testID&A_is_ai=aaa&A_ai_id=0&B_is_ai=aaa&B_ai_id=0';
+//     window.location.search = 'myID=mmmmmmmmmmmm&A_is_ai=aaa&A_ai_id=0&B_is_ai=aaa&B_ai_id=0';
 // }
 // //
 
@@ -111,7 +111,7 @@ function render_play(){
             url : 'aaaa',
             game_type : 'human_ai',
             Aname : myid,
-            Bname : 'My AI: '+Bbot.name,
+            Bname : 'AI:'+Bbot.name,
             Agid : 0,
             Bgid : 1,
             Aroundtime : Aroundtime,
@@ -125,8 +125,8 @@ function render_play(){
             url : 'aaaa',
             myid :myid,
             game_type : 'ai_ai',
-            Aname : 'My AI: '+Abot.name,
-            Bname : 'My AI: '+Bbot.name,
+            Aname : 'AI:'+Abot.name,
+            Bname : 'AI:'+Bbot.name,
             Agid : 0,
             Bgid : 1,
             Aroundtime : Aroundtime,
