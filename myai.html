@@ -97,16 +97,16 @@
 </form>
             </div>
             <div id = "add-ai">
-                <a style="width: 100%" class = "btn btn-raised btn-warning" onclick="javascript:click_add_ai();">Add AI</a>
+                <a style="width: 100%" class = "btn btn-raised btn-warning" onclick="click_add_ai();">Add AI</a>
             </div>
-            <div id = "battle">
-                <a style="width: 100%" class = "btn btn-raised btn-danger">Battle!</a>
+            <div id = "battle" style="display:none;">
+                <a style="width: 100%" class = "btn btn-raised btn-danger" onclick="click_battle();">Battle!</a>
             </div>
         </div>
     </div>
 </div>
 
-<a id="back" class="btn btn-raised btn-primary" href="#" onclick="javascript:history.back(1);"><i class="material-icons">arrow_back</i> </a>
+<a id="back" class="btn btn-raised btn-primary" href="#" onclick="history.back(1);"><i class="material-icons">arrow_back</i> </a>
 <script>window.$ = window.jQuery = require('./static/js/jquery.min');</script>
 
 <script src="./static/js/bootstrap.min.js"></script>

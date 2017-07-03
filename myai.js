@@ -1,7 +1,19 @@
 'use strict'
 
-var Bot = require('./mybot.js');
+function getUrlVar(key){
+	var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
+	return result && unescape(result[1]) || ""; 
+}
 
+function testurl(key){
+    var ret = getUrlVar(key);
+    if(ret === "") return false;
+    else return true;
+}
+
+var Bot = require('./mybot.js');
+var callback;
+var _x;
 var now_page=1;
 var botlist=[];
 var per_page = 5;
@@ -218,4 +230,53 @@ function start(){// 渲染botlist
 
 }
 
+function click_battle(){
+    if(select_bot === -1){
+        alert('Please select an AI!');
+        return;
+    }
+    callback[_x+'type'] = 'ai';
+    callback[_x+'_is_ai'] = 'aaa';
+    callback[_x+'_ai_id'] = select_bot;
+
+    location.href = './matching.html?'+$.param(callback);
+}
+
+function receive(){
+    if(testurl('url')){
+        $('#battle').show();
+        callback = {
+            myid:getUrlVar('myid')
+        }
+        _x = getUrlVar('select');
+        if(testurl('A_is_ai')){
+            callback.Atype = 'ai';
+            callback.A_is_ai = 'aaa';
+            callback.A_ai_id = getUrlVar('A_ai_id');
+        }
+        if(testurl('A_is_human')){
+            callback.Atype = 'human';
+            callback.A_is_human = 'aaa';
+        }
+        if(testurl('B_is_ai')){
+            callback.Btype = 'ai';
+            callback.B_is_ai = 'aaa';
+            callback.B_ai_id = getUrlVar('B_ai_id');
+
+        }
+        if(testurl('B_is_remote')){
+            // remote info
+            callback.Btype = 'remote';
+            callback.B_is_remote = 'aaa';
+
+        }
+        // 上面是发来的information
+        
+        // change back button
+        $('#back').removeAttr('onclick');
+        $('#back').attr('href','./matching.html?'+$.param(callback));
+    }
+}
+
+$(receive);
 $(start)
