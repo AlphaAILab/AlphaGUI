@@ -12,8 +12,8 @@ A.name= "ZRT";
 B.name= "Chenyao";
 A.gid=0;
 B.gid=1;
-A.score=23;
-B.score=39;
+A.score=0;
+B.score=0;
 A.type = "human"
 B.type = "bot"
 // remote
@@ -28,6 +28,7 @@ var _cid; // active cid
 var _card,_rule_card; // active cards
 var hideB = true; // hide op
 var last_rule_card=0;
+var AI_wait_time = 100; // 毫秒
 
 
 // 自己是A
@@ -338,7 +339,7 @@ function Run(X,nxtX){
             console.log("do opearation card = " + card + "\trule_card = " + rule_card);
             setTimeout(function () {
                 do_operation(card, rule_card);
-            }, 2000);
+            }, AI_wait_time);
         });
     }else if(X.type === "human"){
         selectable = true;
