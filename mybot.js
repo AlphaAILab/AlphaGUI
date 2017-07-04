@@ -24,13 +24,13 @@ function _run(input, timelimit, callback) {
     var bot_path = this.bot_path;
     var bot_dir = path.dirname(this.bot_path);
     var input_file = path.join(bot_dir, "input_23323333.txt");
-    var output_file = path.join(bot_dir, "ouput_23323333.txt");
+    var output_file = path.join(bot_dir, "output_23323333.txt");
     var output_txt = path.join(bot_dir, "output.txt");
     var card = 0, rule_card = 0;
     
     try { fs.unlinkSync(input_file);} catch (e) {}
     try { fs.unlinkSync(output_file);} catch (e) {}
-    try { fs.unlinkSync(ouput_txt);} catch (e) {}
+    try { fs.unlinkSync(output_txt);} catch (e) {}
     try {
         fs.writeFileSync(input_file, input);
     } catch (e) {
