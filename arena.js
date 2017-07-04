@@ -1,6 +1,6 @@
 'user strict'
 
-var ipcRenderer = require('electorn').ipcRenderer;
+var ipcRenderer = require('electron').ipcRenderer;
 var Red7 = require('./red7.js');
 var Bot = require('./mybot.js');
 let g;
@@ -19,7 +19,7 @@ A.type = "human"
 B.type = "remote"
 
 ipcRenderer.send("sign_up", localStorage.getItem("uuid"), A.name);
-ipcRenderer.send("update_status", "fighting", B.name);
+ipcRenderer.send("update_statusnp", "fighting", B.name);
 
 
 // remote
@@ -427,7 +427,7 @@ function Run(X,nxtX){
         
     }else if(X.type === "remote"){
         ipcRenderer.send("register", "do_operation");
-        ipcRenderer.on("do_operation", function ([card, rule_card]) {
+        ipcRenderer.on("do_operation", function (e, [card, rule_card]) {
             _do_operation(card, rule_card);
         });
     }
@@ -501,8 +501,8 @@ function start(){
         if (A.name < B.name) {
             ipcRenderer.send("forward", B.name, "set_g", g);
         } else {
-            ipcRenderer.on("register", "seg_g");
-            ipcRenderer.on("seg_g", function (rg) { 
+            ipcRenderer.send("register", "seg_g");
+            ipcRenderer.on("seg_g", function (e, rg) { 
                 g = rg;
                 [A.gid, B.gid] = [B.gid, A.gid];
             });
