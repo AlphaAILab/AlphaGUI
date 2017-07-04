@@ -72,6 +72,14 @@ var rule_color={
     2:"rgb(48,130,200)",
     1: "rgb(126,72,191)"
 };
+
+function save_botlist(botlist){
+    for(var x in botlist){
+        botlist[x].botid=x;
+    }
+    localStorage.setItem('botlist',JSON.stringify(botlist));
+}
+
 function getUrlVar(key){
 	var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
 	return result && unescape(result[1]) || ""; 
@@ -365,7 +373,10 @@ function Run(X,nxtX){
             start();
         }else{
             //加动画 鲁棒的动画
-            if(rule_card>0) last_rule_card = rule_card;
+            if(rule_card>0) {
+                _rule_card = 0;
+                last_rule_card = rule_card;
+            }
             render_init();
             Run(nxtX,X);
         }
@@ -436,6 +447,20 @@ function start(){
             location.href = './matching.html?'+$.param(backparam);
         }, return_wait_time*1000);
 
+        var botlist = JSON.parse(localStorage.getItem('botlist'));
+        if(A.type === 'bot'){
+            console.log(botlist[A.botid]);
+            if(winner.x === 'A')
+                botlist[A.botid].win+=1;
+            botlist[A.botid].play_num+=1;
+        }
+        if(B.type === 'bot'){
+            console.log(botlist[B.botid]);
+            if(winner.x === 'B')
+                botlist[B.botid].win+=1;
+            botlist[B.botid].play_num+=1;
+        }
+        save_botlist(botlist);
         console.log('获胜');
         
         return;
@@ -499,6 +524,7 @@ function receive(){
             var botid = parseInt(getUrlVar("Bbotid"));
             var botlist = JSON.parse(localStorage.getItem('botlist'));
             B.bot_path = botlist[botid].bot_path;
+            B.botid = botid;
 
             // back
             backparam.myid = A.name;
@@ -526,7 +552,9 @@ function receive(){
             var Bbotid = parseInt(getUrlVar("Bbotid"));
             var botlist = JSON.parse(localStorage.getItem('botlist'));
             A.bot_path = botlist[Abotid].bot_path;
+            A.botid = Abotid;
             B.bot_path = botlist[Bbotid].bot_path;
+            B.botid = Bbotid;
 
             backparam.myid = getUrlVar('myid');
             backparam.A_is_ai = 'aaa';
@@ -537,9 +565,9 @@ function receive(){
             console.log(A.bot_path);
             console.log(B.bot_path);
             // debug
-            //A.roundtime = 3;
+            //A.roundtime = 30;
             //round_wait_time = 100;
-            
+            //return_wait_time = 100;
 
         }
         
