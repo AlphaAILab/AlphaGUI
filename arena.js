@@ -10,7 +10,7 @@ let selectable = false;
 A.x ="A"
 B.x = "B"
 A.name= localStorage.getItem('username');
-B.name= "Chenyao2333";
+B.name= "zrt";
 A.gid=0;
 B.gid=1;
 A.score=0;
@@ -19,7 +19,7 @@ A.type = "human"
 B.type = "remote"
 
 ipcRenderer.send("sign_up", localStorage.getItem("uuid"), A.name);
-ipcRenderer.send("update_statusnp", "fighting", B.name);
+ipcRenderer.send("update_status", "fighting", B.name);
 
 
 // remote
