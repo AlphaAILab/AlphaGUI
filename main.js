@@ -59,6 +59,7 @@ function s_call(cmd) {
 }
 
 ipcMain.on("register", function (e, cmd) {
+  console.log("register: " + cmd);
   sender = e.sender;
     registered[cmd] = true;
     if (buffer[cmd] !== undefined) {
@@ -67,6 +68,7 @@ ipcMain.on("register", function (e, cmd) {
 });
 
 s.on("forward", function (cmd, args) {
+  console.log("forward: " + args);
   buffer[cmd] = args;
   if (registered[cmd] !== undefined) {
       s_call(cmd);
