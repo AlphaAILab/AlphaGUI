@@ -505,6 +505,7 @@ function start(){
             ipcRenderer.on("seg_g", function (e, rg) { 
                 g = rg;
                 [A.gid, B.gid] = [B.gid, A.gid];
+                _do();
             });
         }
     } else {
