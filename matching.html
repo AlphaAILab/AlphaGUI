@@ -31,6 +31,14 @@
         -webkit-user-select: none;
         user-select: none;
         cursor:default;
+        -webkit-user-select:none;
+        
+      }
+      #vs{
+        position: absolute;
+        width: 120px;
+        top:160px;
+        left:340px;
       }
     </style>
 </head>
@@ -42,8 +50,8 @@
     <div class = "well infobox" style="width: 90%; height:70%; margin: auto; margin-top: 5%;">
       <h3 id="Aid"></h3>
       <div class="text-center"> 
-      <a  class="btn btn-info btn-raised" style="margin-top:60px;width:200px;" onclick="click_human();">Human Wisdom </a>
-      <a  class="btn btn-primary btn-raised" style="margin-top:20px;width:200px;" onclick="click_A_ai();">USE AI </a> 
+      <a  class="btn btn-info btn-raised" style="margin-top:60px;width:200px;" onclick="click_human();"><i class="material-icons">face</i>Human Wisdom </a>
+      <a  class="btn btn-primary btn-raised" style="margin-top:20px;width:200px;" onclick="click_A_ai();"><i class="material-icons">computer</i>USE AI </a> 
       <a  class="btn btn-success disabled" style="margin-top:20px;width:200px;">Current: <span id="Acur"></span></a>
       </div>
     </div>
@@ -53,8 +61,8 @@
     <div class = "well infobox" style="width: 90%; height:70%; margin: auto; margin-top: 5%;">
       <h3 id="Bid"></h3>
       <div class="text-center"> 
-      <a  class="btn btn-info btn-raised" style="margin-top:60px;width:200px;" onclick="click_remote();">ONLINE PLAY </a>
-      <a  class="btn btn-primary btn-raised" style="margin-top:20px;width:200px;" onclick="click_B_ai();"> USE LOCAL AI </a> 
+      <a  class="btn btn-info btn-raised" style="margin-top:60px;width:200px;" onclick="click_remote();"><i class="material-icons">supervisor_account</i>ONLINE PLAY </a>
+      <a  class="btn btn-primary btn-raised" style="margin-top:20px;width:200px;" onclick="click_B_ai();"> <i class="material-icons">computer</i>USE LOCAL AI </a> 
       <a class="btn btn-success disabled" style="margin-top:20px;width:200px;">Current: <span id="Bcur"></span></a>
       </div>
     </div>
@@ -69,6 +77,7 @@
 
 
 <a id="back" class="btn btn-raised btn-primary"  href="./home.html"><i class="material-icons">arrow_back</i> </a>
+<img id="vs" src="./static/img/vs.png"> 
 
 <script>window.$ = window.jQuery = require('./static/js/jquery.min');</script>
 

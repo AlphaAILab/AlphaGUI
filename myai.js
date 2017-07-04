@@ -278,5 +278,13 @@ function receive(){
     }
 }
 
+$(function(){
+    $.snackbar({
+        content: "You can select an AI from left panel.", 
+        style: "toast", 
+        timeout: snackbar_time
+    })
+});
+
 $(receive);
 $(start)
