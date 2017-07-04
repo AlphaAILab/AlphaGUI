@@ -58,6 +58,9 @@ function _run(input, timelimit, callback) {
         console.log(e);
     });
     child.on("close", (code) => {
+        if(code === null){
+            code = 0;
+        }
         clearTimeout(watcher);
         closed = true;
 
@@ -75,9 +78,12 @@ function _run(input, timelimit, callback) {
         }
 
         var a = parse_output(output_file);
-        if (a[0] > 0 || a[1] > 0) [rule_card, card] = a;
+        
+        if ((a[0] > 0 && a[0] <=77 )|| (a[1] > 0 && a[1]<=77)) [rule_card, card] = a;
         else {
+            //console.log('lalala');
             [rule_card, card] = parse_output(output_txt);
+            console.log([rule_card, card])
         }
 
 
@@ -87,6 +93,7 @@ function _run(input, timelimit, callback) {
         try { fs.unlinkSync(output_file);} catch (e) {console.log(e);}
         try { fs.unlinkSync(output_txt);} catch (e) {console.log(e);}
         
+        //console.log('debug code:' + code);
         callback(code, card, rule_card)
     });
 }

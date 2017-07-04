@@ -296,6 +296,7 @@ function show_win(winner){
 
 function do_timeout(X,do_operation) {
     $('#clock'+X.x).text('timeout!');
+    console.log(X);
     if(X.type === 'remote' || X.type === 'bot' ){
         //不用干
     }else{
@@ -337,6 +338,12 @@ function Run(X,nxtX){
         if(r!==round_num) return;
         round_num += 1;
         selectable = false;
+        if(typeof(card)!=='number' || !(card>=0 && card<=77)){
+            card = 0;
+        }
+        if(typeof(rule_card)!=='number'||!(rule_card>=0 && rule_card<=77)){
+            rule_card = 0;
+        }
         var ret = g.play(X.gid,card,rule_card);
         if(ret === false){
             show_win(nxtX);
@@ -372,7 +379,10 @@ function Run(X,nxtX){
         var bot = new Bot(X.bot_path);
         bot.run(g.gen_input(X.gid), X.roundtime * 1000, function (err, card, rule_card) {
             if (err !== 0) {
-                console.log("error: " + err);
+                console.log("error: " + err+' '+card+' '+rule_card);
+                setTimeout(function () {
+                    _do_operation(0, 0);
+                }, 0);
             }
             console.log("do opearation card = " + card + "\trule_card = " + rule_card);
             setTimeout(function () {
@@ -512,7 +522,8 @@ function receive(){
             console.log(A.bot_path);
             console.log(B.bot_path);
             // debug
-            A.roundtime = 3;
+            //A.roundtime = 3;
+            //round_wait_time = 100;
             
 
         }
