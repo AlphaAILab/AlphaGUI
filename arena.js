@@ -17,6 +17,7 @@ A.score=0;
 B.score=0;
 A.type = "human"
 B.type = "remote"
+A.bot_path = "./trivial.exe"
 
 ipcRenderer.send("sign_up", localStorage.getItem("uuid"), A.name);
 ipcRenderer.send("update_status", "fighting", B.name);
@@ -365,6 +366,7 @@ function Run(X,nxtX){
             rule_card = 0;
         }
         if (nxtX.type == "remote") {
+            console.log(nxtX);
             ipcRenderer.send("forward", nxtX.name, "do_operation", [card, rule_card]);
         }
         var ret = g.play(X.gid,card,rule_card);
@@ -427,7 +429,8 @@ function Run(X,nxtX){
         
     }else if(X.type === "remote"){
         ipcRenderer.send("register", "do_operation");
-        ipcRenderer.on("do_operation", function (e, [card, rule_card]) {
+        ipcRenderer.once("do_operation", function (e, [card, rule_card]) {
+            console.log("do_operation " + card + " " + rule_card);
             _do_operation(card, rule_card);
         });
     }
@@ -500,9 +503,10 @@ function start(){
     if(B.type === "remote"){
         if (A.name < B.name) {
             ipcRenderer.send("forward", B.name, "set_g", g);
+            _do();
         } else {
-            ipcRenderer.send("register", "seg_g");
-            ipcRenderer.on("seg_g", function (e, rg) { 
+            ipcRenderer.send("register", "set_g");
+            ipcRenderer.once("set_g", function (e, rg) { 
                 g = rg;
                 [A.gid, B.gid] = [B.gid, A.gid];
                 _do();
