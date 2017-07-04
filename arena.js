@@ -442,13 +442,13 @@ function start(){
 
         var botlist = JSON.parse(localStorage.getItem('botlist'));
         if(A.type === 'bot'){
-            console.log(botlist[A.botid]);
+            //console.log(botlist[A.botid]);
             if(winner.x === 'A')
                 botlist[A.botid].win+=1;
             botlist[A.botid].play_num+=1;
         }
         if(B.type === 'bot'){
-            console.log(botlist[B.botid]);
+            //console.log(botlist[B.botid]);
             if(winner.x === 'B')
                 botlist[B.botid].win+=1;
             botlist[B.botid].play_num+=1;
