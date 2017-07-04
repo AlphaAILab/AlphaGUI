@@ -7,6 +7,54 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
+var io = require("socket.io-client");
+var socket = io("http://:23333");
+const ipcMain = electron.ipcMain;
+
+var uuid = null;
+var username = "Chenyao2333";
+var status = "online";
+
+ipcMain.on("sign_up", function (uuid_, username_) {
+  username = username_;
+  uuid = uuid_;
+  s.emit("sign_up", uuid, username);
+});
+
+ipcMain.on("update_status", function (status, op) {
+  if (op === undefined) op = null;
+  s.emit("update_status", uuid, status, op);
+});
+
+ipcMain.on("forward", function (toname, cmd, args) {
+  s.emit("forward", toname, cmd, args);
+});
+
+var registered = {};
+var buffer = {};
+
+function s_call(cmd) {
+    args = buffer[cmd];
+    registered[cmd] = undefined;
+    buffer[cmd] = undefined;
+    ipcMain.emit(cmd, args);
+}
+
+ipcMain.on("register", function (cmd) {
+    registered[cmd] = true;
+    if (buffer[cmd] !== undefined) {
+        s_call(cmd);
+    }
+});
+
+s.on("forward", function (cmd, args) {
+  buffer[cmd] = args;
+  if (registered[cmd] !== undefined) {
+      s_call(cmd);
+  }
+});
+
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow

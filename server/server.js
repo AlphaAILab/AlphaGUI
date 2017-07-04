@@ -76,7 +76,9 @@ io.on("connection", function(socket) {
             socket.emit("match_failed");
         } else {
             user.opponent = op;
+            user.status = "fighting";
             touser.opponent = user.name;
+            touser.status = "fighting";
             user.emit("matched", op);
             touser.emit("matched", user.name);
         }

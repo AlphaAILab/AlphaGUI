@@ -1,5 +1,6 @@
 'user strict'
 
+var ipcRenderer = require('electorn').ipcRenderer;
 var Red7 = require('./red7.js');
 var Bot = require('./mybot.js');
 let g;
@@ -344,6 +345,9 @@ function Run(X,nxtX){
         if(typeof(rule_card)!=='number'||!(rule_card>=0 && rule_card<=77)){
             rule_card = 0;
         }
+        if (nxtX.type == "remote") {
+            ipcRenderer.emit("forward", nxtX.name, "do_operation", [card, rule_card]);
+        }
         var ret = g.play(X.gid,card,rule_card);
         if(ret === false){
             show_win(nxtX);
@@ -400,7 +404,10 @@ function Run(X,nxtX){
         $('#op-pan').show();
         
     }else if(X.type === "remote"){
-        // 类似mybot
+        ipcRenderer.emit("register", "do_operation");
+        ipcRenderer.on("do_operation", function ([card, rule_card]) {
+            _do_operation(card, rule_card);
+        });
     }
 
 }
@@ -441,11 +448,6 @@ function start(){
     _cid=0;
     _card = _rule_card =0;
     
-    if(B.type === "remote"){
-        // wangluo
-    
-        //wangluo end
-    }
 
     var _do = function() {
         if(getNow()>start_time){
@@ -458,7 +460,20 @@ function start(){
             setTimeout(_do, 100);
         }
     }
-    _do();
+
+    if(B.type === "remote"){
+        if (A.name < B.name) {
+            ipcRenderer.emit("forward", B.name, "set_g", g);
+        } else {
+            ipcRenderer.on("register", "seg_g");
+            ipcRenderer.on("seg_g", function (rg) { 
+                g = rg;
+                [A.gid, B.gid] = [B.gid, A.gid];
+            });
+        }
+    } else {
+        _do();
+    }
     
 }
 function receive(){
