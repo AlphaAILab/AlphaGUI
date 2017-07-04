@@ -18,10 +18,6 @@ B.score=0;
 A.type = "human"
 B.type = "remote"
 
-ipcRenderer.send("sign_up", localStorage.getItem("uuid"), A.name);
-ipcRenderer.send("update_status", "fighting", B.name);
-
-
 // remote
 A.roundtime = 2;
 B.roundtime = 100;
@@ -45,14 +41,6 @@ var game_type;
 // 排序
 // 观战
 // 防止双开
-
-ipcRenderer.once("opponet_disconnected", function(e, op) {
-    if (op === B.name) {
-        _op_timeout = true;
-        A.score = 40;
-        start();
-    }
-});
 
 
 
@@ -525,6 +513,7 @@ function start(){
             ipcRenderer.send("forward", B.name, "set_g", g);
             A.gid = 0;
             B.gid = 1;
+            _do();
         } else {
             A.gid = 1;
             B.gid = 0;
@@ -630,14 +619,14 @@ function receive(){
                 console.log('[!] unknow A type');
             }
             B.type = 'remote';
-            if(A.type === 'ai'){
+            if(A.type === 'bot'){
                 var Abotid = parseInt(getUrlVar('Abotid'));
                 var botlist = JSON.parse(localStorage.getItem('botlist'));
                 A.bot_path = botlist[Abotid].bot_path;
                 A.botid = Abotid;
                 
             }
-            if(A.type === 'ai'){
+            if(A.type === 'bot'){
                 backparam.A_is_ai = 'aaa';
                 backparam.A_ai_id = A.botid;
             }else{
@@ -649,6 +638,19 @@ function receive(){
             if(_op_timeout){
                 backparam = {};
             }
+
+            ipcRenderer.send("sign_up", localStorage.getItem("uuid"), A.name);
+            ipcRenderer.send("update_status", "fighting", B.name);
+
+
+            ipcRenderer.once("opponet_disconnected", function(e, op) {
+                if (op === B.name) {
+                    _op_timeout = true;
+                    A.score = 40;
+                    start();
+                }
+            });
+
         }
         
 

@@ -1,6 +1,6 @@
 'use strict'
 
-var myid = "Ruotian";
+var myid = localStorage.getItem('username');
 var A_is_ai ;
 var A_ai_id ;
 var A_is_human ;
@@ -15,6 +15,7 @@ var Broundtime = 20;
 var hideB = true;
 var AI_wait_time =200;// ms
 var opid = 'zrt';
+var if_hide_b = true;
 
 function getUrlVar(key){
 	var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
@@ -169,7 +170,6 @@ function render_play(){
 }
 
 function start(){
-    myid = getUrlVar('myid') || "Ruotian";
     A_is_ai = testurl('A_is_ai');
     A_ai_id = -1;
     if(A_is_ai){

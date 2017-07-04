@@ -282,7 +282,7 @@ $(function(){
     $.snackbar({
         content: "You can select an AI from left panel.", 
         style: "toast", 
-        timeout: snackbar_time
+        timeout: 8000
     })
 });
 

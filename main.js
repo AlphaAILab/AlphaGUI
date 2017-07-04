@@ -92,7 +92,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'arena.html'),
+    pathname: path.join(__dirname, 'home.html'),
     protocol: 'file:',
     slashes: true
   }))

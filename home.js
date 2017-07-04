@@ -51,6 +51,9 @@ function start(){
     }
 
 
+    ipcRenderer.send("sign_up", localStorage.getItem("uuid"), username);
+    ipcRenderer.send("update_status", "online", null );
+
 
 }
 
