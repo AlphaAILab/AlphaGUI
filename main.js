@@ -8,25 +8,39 @@ const path = require('path')
 const url = require('url')
 
 var io = require("socket.io-client");
-var socket = io("http://bj02.lcybox.com:23333");
+var s = io("http://bj02.lcybox.com:23333");
 const ipcMain = electron.ipcMain;
 
 var uuid = null;
 var username = "Chenyao2333";
 var status = "online";
 
-ipcMain.on("sign_up", function (uuid_, username_) {
+var sender = null;
+
+ipcMain.on("sign_up", function (e, uuid_, username_) {
+  sender = e.sender;
   username = username_;
   uuid = uuid_;
+  console.log(uuid_ + " " + username_);
   s.emit("sign_up", uuid, username);
 });
 
-ipcMain.on("update_status", function (status, op) {
+s.on("name_be_used", function (username_) {
+  sender.send("name_be_used", username_);
+});
+s.on("signup_success", function (username_) {
+  console.log("signup_success: " + username_);
+  sender.send("signup_success", username_);
+});
+
+ipcMain.on("update_status", function (e, status, op) {
+  sender = e.sender;
   if (op === undefined) op = null;
   s.emit("update_status", uuid, status, op);
 });
 
-ipcMain.on("forward", function (toname, cmd, args) {
+ipcMain.on("forward", function (e, toname, cmd, args) {
+  sender = e.sender;
   s.emit("forward", toname, cmd, args);
 });
 
@@ -37,10 +51,11 @@ function s_call(cmd) {
     args = buffer[cmd];
     registered[cmd] = undefined;
     buffer[cmd] = undefined;
-    ipcMain.emit(cmd, args);
+    sender.send(cmd, args);
 }
 
-ipcMain.on("register", function (cmd) {
+ipcMain.on("register", function (e, cmd) {
+  sender = e.sender;
     registered[cmd] = true;
     if (buffer[cmd] !== undefined) {
         s_call(cmd);
