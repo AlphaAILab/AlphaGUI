@@ -10,21 +10,20 @@ let selectable = false;
 A.x ="A"
 B.x = "B"
 A.name= localStorage.getItem('username');
-B.name= "zrt";
+B.name= "Chenyao2333";
 A.gid=0;
 B.gid=1;
 A.score=0;
 B.score=0;
 A.type = "human"
 B.type = "remote"
-A.bot_path = "./trivial.exe"
 
 ipcRenderer.send("sign_up", localStorage.getItem("uuid"), A.name);
 ipcRenderer.send("update_status", "fighting", B.name);
 
 
 // remote
-A.roundtime = 100;
+A.roundtime = 2;
 B.roundtime = 100;
 var round_num=0;
 var start_time = 0;
@@ -37,6 +36,7 @@ var hideB = true; // hide op
 var last_rule_card=0;
 var AI_wait_time = 100; // 毫秒
 var return_wait_time=5;
+var _op_timeout = false;
 
 var backparam = {}
 
@@ -46,8 +46,9 @@ var game_type;
 // 观战
 // 防止双开
 
-ipcRenderer.on("opponet_disconnected", function(e, op) {
+ipcRenderer.once("opponet_disconnected", function(e, op) {
     if (op === B.name) {
+        _op_timeout = true;
         A.score = 40;
         start();
     }
@@ -366,8 +367,9 @@ function Run(X,nxtX){
             rule_card = 0;
         }
         if (nxtX.type == "remote") {
-            console.log(nxtX);
+            ipcRenderer.send("debug", "before forward");
             ipcRenderer.send("forward", nxtX.name, "do_operation", [card, rule_card]);
+            ipcRenderer.send("debug", "after forward")
         }
         var ret = g.play(X.gid,card,rule_card);
         if(ret === false){
@@ -412,7 +414,7 @@ function Run(X,nxtX){
                     _do_operation(0, 0);
                 }, 0);
             }
-            console.log("do opearation card = " + card + "\trule_card = " + rule_card);
+            console.log("do operation card = " + card + "\trule_card = " + rule_card);
             setTimeout(function () {
                 _do_operation(card, rule_card);
             }, AI_wait_time);
@@ -428,11 +430,11 @@ function Run(X,nxtX){
         $('#op-pan').show();
         
     }else if(X.type === "remote"){
-        ipcRenderer.send("register", "do_operation");
         ipcRenderer.once("do_operation", function (e, [card, rule_card]) {
-            console.log("do_operation " + card + " " + rule_card);
+            console.log("in chenyao's sb do_operation " + card + " " + rule_card);
             _do_operation(card, rule_card);
         });
+        ipcRenderer.send("register", "do_operation");
     }
 
 }
@@ -446,16 +448,34 @@ function start(){
             winner =A;
         }else winner = B;
         
-        $.alert({
-            title: `${winner.name} win!`,
-            content: `${winner.name} win this game! Automatic return in ${return_wait_time}s.`,
-            autoClose: `close|${return_wait_time*1000 -1000}`,
-            buttons:{
-                close : function(){
-                    console.log('message_box close');
+        if(_op_timeout){
+            winner = A;
+            
+            $.alert({
+                title: `${winner.name} win!`,
+                content: `${B.name} left. ${winner.name} win this game! Automatic return in ${return_wait_time}s.`,
+                autoClose: `close|${return_wait_time*1000 -1000}`,
+                buttons:{
+                    close : function(){
+                        console.log('message_box close');
+                    }
                 }
-            }
-        })
+            })
+        }else{
+            $.alert({
+                title: `${winner.name} win!`,
+                content: `${winner.name} win this game! Automatic return in ${return_wait_time}s.`,
+                autoClose: `close|${return_wait_time*1000 -1000}`,
+                buttons:{
+                    close : function(){
+                        console.log('message_box close');
+                    }
+                }
+            })
+
+
+        }
+        
 
         setTimeout(function() {
             location.href = './matching.html?'+$.param(backparam);
@@ -498,19 +518,23 @@ function start(){
         }else{
             setTimeout(_do, 100);
         }
-    }
+   }
 
     if(B.type === "remote"){
         if (A.name < B.name) {
             ipcRenderer.send("forward", B.name, "set_g", g);
-            _do();
+            A.gid = 0;
+            B.gid = 1;
         } else {
-            ipcRenderer.send("register", "set_g");
+            A.gid = 1;
+            B.gid = 0;
             ipcRenderer.once("set_g", function (e, rg) { 
-                g = rg;
-                [A.gid, B.gid] = [B.gid, A.gid];
+                g.current_rule = rg.current_rule;
+                g.hands = rg.hands;
+                g.palette = rg.palette;
                 _do();
             });
+            ipcRenderer.send("register", "set_g");
         }
     } else {
         _do();

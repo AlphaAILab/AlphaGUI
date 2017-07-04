@@ -44,6 +44,7 @@ ipcMain.on("update_status", function (e, status, op) {
 });
 
 ipcMain.on("forward", function (e, toname, cmd, args) {
+  console.log("forward out");
   sender = e.sender;
   s.emit("forward", toname, cmd, args);
 });
@@ -67,8 +68,13 @@ ipcMain.on("register", function (e, cmd) {
     }
 });
 
+ipcMain.on("debug", function (e, msg) {
+  var x = new Date();
+  console.log(x.getTime() + msg);
+});
+
 s.on("forward", function (cmd, args) {
-  console.log("forward: " + args);
+  console.log("forward: " + cmd + " " + args);
   buffer[cmd] = args;
   if (registered[cmd] !== undefined) {
       s_call(cmd);
