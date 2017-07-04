@@ -284,7 +284,7 @@ function show_win(winner){
     $.alert({
         title: `${winner.name} win!`,
         content: `${winner.name} win this round! Next round will start in ${round_wait_time}s.`,
-        autoClose: `close|${round_wait_time *1000}`,
+        autoClose: `close|${round_wait_time *1000 -1000}`,
         buttons:{
             close : function(){
                 console.log('message_box close');
@@ -407,7 +407,7 @@ function start(){
         $.alert({
             title: `${winner.name} win!`,
             content: `${winner.name} win this game! Automatic return in ${return_wait_time}s.`,
-            autoClose: `close|${return_wait_time*1000}`,
+            autoClose: `close|${return_wait_time*1000 -1000}`,
             buttons:{
                 close : function(){
                     console.log('message_box close');
