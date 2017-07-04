@@ -552,7 +552,7 @@ function receive(){
             // debug
             //A.roundtime = 30;
             //round_wait_time = 100;
-            return_wait_time = 100;
+            //return_wait_time = 100;
 
         }
         

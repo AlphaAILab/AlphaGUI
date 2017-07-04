@@ -38,6 +38,11 @@
         user-select: none;
         cursor:default;
       }
+      #bug{
+        position: absolute;
+        right: 20px;
+        bottom: 10px;
+      }
     </style>
     
 </head>
@@ -68,7 +73,11 @@
         </div>
     </div>
 </div>
+<a id="bug" class="btn"  href="#" onclick="bug();"><i class="material-icons">bug_report</i> </a>
+
 <script>window.$ = window.jQuery = require('./static/js/jquery.min');</script>
+
+<script src="./bugreporter.js"> </script>
 
 <script src="./static/js/bootstrap.min.js"></script>
 
