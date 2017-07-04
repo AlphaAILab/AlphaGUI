@@ -369,7 +369,7 @@ function Run(X,nxtX){
     // 如果B是remote,调网络库获取操作，并执行。
     start_clock(round_num,X,do_operation);
     if(X.type === "bot"){
-        var bot = new Bot(B.bot_path);
+        var bot = new Bot(X.bot_path);
         bot.run(g.gen_input(X.gid), X.roundtime * 1000, function (err, card, rule_card) {
             if (err !== 0) {
                 console.log("error: " + err);
@@ -508,6 +508,11 @@ function receive(){
             backparam.A_ai_id = Abotid;
             backparam.B_is_ai = 'aaa';
             backparam.B_ai_id = Bbotid;
+            console.log('path');
+            console.log(A.bot_path);
+            console.log(B.bot_path);
+            // debug
+            A.roundtime = 3;
             
 
         }
