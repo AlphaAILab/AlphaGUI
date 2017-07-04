@@ -56,10 +56,13 @@ io.on("connection", function(socket) {
             return;
         }
 
+        console.log(user.name + " to " + toname + ": " + cmd + "\t" + args);
         var touser = name2user[toname];
         if (touser === undefined || touser.socket === null) {
+            console.log("forward_failed");
             socket.emit("forward_failed", toname);
         } else {
+            console.log("forward");
             touser.socket.emit("forward", cmd, args);
         }
     });
@@ -98,7 +101,7 @@ io.on("connection", function(socket) {
                 if (user.opponent) {
                     var touser = name2user[user.opponent];
                     if (touser !== undefined && touser.socket !== null) {
-                        touser.emit("opponet_disconnected", user.name);
+                        touser.socket.emit("opponet_disconnected", user.name);
                     }
                     user.opponent = null;
                 }
