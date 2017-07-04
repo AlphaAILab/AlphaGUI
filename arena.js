@@ -9,17 +9,17 @@ var B={};
 let selectable = false;
 A.x ="A"
 B.x = "B"
-A.name= "ZRT";
-B.name= "Chenyao";
+A.name= localStorage.getItem('username');
+B.name= "Chenyao2333";
 A.gid=0;
 B.gid=1;
 A.score=0;
 B.score=0;
 A.type = "human"
-B.type = "bot"
+B.type = "remote"
 // remote
 A.roundtime = 100;
-B.roundtime = 20;
+B.roundtime = 100;
 var round_num=0;
 var start_time = 0;
 var _do_operation;
@@ -40,6 +40,12 @@ var game_type;
 // 观战
 // 防止双开
 
+ipcRenderer.on("opponet_disconnected", function(e, op) {
+    if (op === B.name) {
+        A.score = 40;
+        start();
+    }
+});
 
 
 
@@ -354,7 +360,7 @@ function Run(X,nxtX){
             rule_card = 0;
         }
         if (nxtX.type == "remote") {
-            ipcRenderer.emit("forward", nxtX.name, "do_operation", [card, rule_card]);
+            ipcRenderer.send("forward", nxtX.name, "do_operation", [card, rule_card]);
         }
         var ret = g.play(X.gid,card,rule_card);
         if(ret === false){
@@ -415,7 +421,7 @@ function Run(X,nxtX){
         $('#op-pan').show();
         
     }else if(X.type === "remote"){
-        ipcRenderer.emit("register", "do_operation");
+        ipcRenderer.send("register", "do_operation");
         ipcRenderer.on("do_operation", function ([card, rule_card]) {
             _do_operation(card, rule_card);
         });
@@ -488,7 +494,7 @@ function start(){
 
     if(B.type === "remote"){
         if (A.name < B.name) {
-            ipcRenderer.emit("forward", B.name, "set_g", g);
+            ipcRenderer.send("forward", B.name, "set_g", g);
         } else {
             ipcRenderer.on("register", "seg_g");
             ipcRenderer.on("seg_g", function (rg) { 

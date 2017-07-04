@@ -32,6 +32,10 @@ s.on("signup_success", function (username_) {
   console.log("signup_success: " + username_);
   sender.send("signup_success", username_);
 });
+s.on("opponet_disconnected", function (opponet) {
+  console.log("opponet_disconnected: " + opponet);
+  sender.send("opponet_disconnected", opponet);
+});
 
 ipcMain.on("update_status", function (e, status, op) {
   sender = e.sender;
@@ -80,7 +84,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'home.html'),
+    pathname: path.join(__dirname, 'arena.html'),
     protocol: 'file:',
     slashes: true
   }))
