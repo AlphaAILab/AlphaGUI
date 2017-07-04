@@ -8,7 +8,7 @@ const path = require('path')
 const url = require('url')
 
 var io = require("socket.io-client");
-var socket = io("http://:23333");
+var socket = io("http://bj02.lcybox.com:23333");
 const ipcMain = electron.ipcMain;
 
 var uuid = null;
