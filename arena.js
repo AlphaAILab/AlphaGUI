@@ -29,6 +29,7 @@ var _card,_rule_card; // active cards
 var hideB = true; // hide op
 var last_rule_card=0;
 var AI_wait_time = 100; // 毫秒
+var return_wait_time=5;
 
 var backparam = {}
 
@@ -280,7 +281,17 @@ function render_init(){
 }
 
 function show_win(winner){
-    $('#rule').text(winner.name + " win!");
+    $.alert({
+        title: `${winner.name} win!`,
+        content: `${winner.name} win this round! Next round will start in ${round_wait_time}s.`,
+        autoClose: `close|${round_wait_time *1000}`,
+        buttons:{
+            close : function(){
+                console.log('message_box close');
+            }
+        }
+    })
+    
 }
 
 function do_timeout(X,do_operation) {
@@ -392,11 +403,21 @@ function start(){
         if(A.score>B.score){
             winner =A;
         }else winner = B;
-        $('#rule').text(winner.name + ' win this game!');
+        
+        $.alert({
+            title: `${winner.name} win!`,
+            content: `${winner.name} win this game! Automatic return in ${return_wait_time}s.`,
+            autoClose: `close|${return_wait_time*1000}`,
+            buttons:{
+                close : function(){
+                    console.log('message_box close');
+                }
+            }
+        })
 
         setTimeout(function() {
             location.href = './matching.html?'+$.param(backparam);
-        }, 5000);
+        }, return_wait_time*1000);
 
         console.log('获胜');
         
