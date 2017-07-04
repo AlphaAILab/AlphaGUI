@@ -17,6 +17,11 @@ A.score=0;
 B.score=0;
 A.type = "human"
 B.type = "remote"
+
+ipcRenderer.send("sign_up", localStorage.getItem("uuid"), A.name);
+ipcRenderer.send("update_status", "fighting", B.name);
+
+
 // remote
 A.roundtime = 100;
 B.roundtime = 100;
