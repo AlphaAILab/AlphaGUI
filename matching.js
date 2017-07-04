@@ -14,6 +14,7 @@ var Aroundtime = 100;
 var Broundtime = 20;
 var hideB = true;
 var AI_wait_time =200;// ms
+var opid = 'zrt';
 
 function getUrlVar(key){
 	var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
@@ -99,7 +100,11 @@ function click_B_ai(){
 
 function click_remote(){
     // choose online 0.0
+    
+    Btype = 'remote';
+    opid = 'Chenyao2333';
 
+    render_play();
 }
 
 
@@ -110,7 +115,6 @@ function render_play(){
         $('#play').attr('href','./arena.html?'+$.param({
             url : 'aaaa',
             game_type : 'human_ai',
-            Aname : myid,
             Bname : 'AI:'+Bbot.name,
             Agid : 0,
             Bgid : 1,
@@ -123,7 +127,6 @@ function render_play(){
     }else if(Atype === 'ai' && Btype === 'ai'){
         $('#play').attr('href','./arena.html?'+$.param({
             url : 'aaaa',
-            myid :myid,
             game_type : 'ai_ai',
             Aname : 'AI:'+Abot.name,
             Bname : 'AI:'+Bbot.name,
@@ -135,6 +138,31 @@ function render_play(){
             hideB : false,
             Abotid : Abot.botid,
             Bbotid : Bbot.botid
+        }))
+    }else if(Atype === 'ai' && Btype === 'remote'){
+        $('#play').attr('href','./arena.html?'+$.param({
+            url : 'aaaa',
+            game_type : 'online',
+            Aname : myid,
+            Bname : opid,
+            Aroundtime : Aroundtime,
+            Broundtime : Broundtime,
+            AIwaittime : AI_wait_time,
+            hideB : if_hide_b,
+            Abotid : Abot.botid,
+            A_is_ai:'aaa'
+        }))
+    }else if(Atype === 'human' && Btype === 'remote'){
+        $('#play').attr('href','./arena.html?'+$.param({
+            url : 'aaaa',
+            game_type : 'online',
+            Aname : myid,
+            Bname : opid,
+            Aroundtime : Aroundtime,
+            Broundtime : Broundtime,
+            AIwaittime : AI_wait_time,
+            hideB : if_hide_b,
+            A_is_human:'aaa'
         }))
     }
 
@@ -178,7 +206,9 @@ function start(){
     }
     if(B_is_remote){
         Btype = 'remote';
+        opid = getUrlVar('Bname');
         // do something remote
+        Bcur = opid;
 
     }
 

@@ -567,7 +567,6 @@ function receive(){
             B.botid = botid;
 
             // back
-            backparam.myid = A.name;
             backparam.A_is_human = 'aaa';
             backparam.B_is_ai = 'aaa';
             backparam.B_ai_id = botid;
@@ -596,7 +595,6 @@ function receive(){
             B.bot_path = botlist[Bbotid].bot_path;
             B.botid = Bbotid;
 
-            backparam.myid = getUrlVar('myid');
             backparam.A_is_ai = 'aaa';
             backparam.A_ai_id = Abotid;
             backparam.B_is_ai = 'aaa';
@@ -609,6 +607,48 @@ function receive(){
             //round_wait_time = 100;
             //return_wait_time = 100;
 
+        }else if(game_type === 'online'){
+            A.name = getUrlVar('Aname');
+            B.name = getUrlVar('Bname');
+            A.gid = 0;
+            B.gid =1;
+            A.roundtime =parseInt(getUrlVar('Aroundtime'));
+            B.roundtime = parseInt(getUrlVar('Broundtime'));
+            AI_wait_time = parseInt(getUrlVar('AIwaittime'));
+
+            var _hideB = getUrlVar('hideB');
+            if(_hideB === "true") hideB = true;
+            else if(_hideB === "false") hideB = false;
+            else{
+                console.log('[!] _hideB: ',_hideB);
+            }
+            if(testurl('A_is_ai')){
+                A.type = 'bot';
+            }else if(testurl('A_is_human')){
+                A.type = 'human';
+            }else{
+                console.log('[!] unknow A type');
+            }
+            B.type = 'remote';
+            if(A.type === 'ai'){
+                var Abotid = parseInt(getUrlVar('Abotid'));
+                var botlist = JSON.parse(localStorage.getItem('botlist'));
+                A.bot_path = botlist[Abotid].bot_path;
+                A.botid = Abotid;
+                
+            }
+            if(A.type === 'ai'){
+                backparam.A_is_ai = 'aaa';
+                backparam.A_ai_id = A.botid;
+            }else{
+                backparam.A_is_human = 'aaa';
+            }
+            backparam.B_is_remote = 'aaa';
+            backparam.Bname = B.name;
+
+            if(_op_timeout){
+                backparam = {};
+            }
         }
         
 
