@@ -19,7 +19,7 @@ A.type = "human"
 B.type = "remote"
 
 ipcRenderer.send("sign_up", localStorage.getItem("uuid"), A.name);
-ipcRenderer.send("update_statusnp", "fighting", B.name);
+ipcRenderer.send("update_status", "fighting", B.name);
 
 
 // remote
