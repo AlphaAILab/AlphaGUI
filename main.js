@@ -12,8 +12,9 @@ var s = io("http://bj02.lcybox.com:23333");
 const ipcMain = electron.ipcMain;
 
 var uuid = null;
-var username = "Chenyao2333";
-var status = "online";
+var username = "a";
+var status_save = "online";
+var op_save = null;
 var online_users = [];
 var game_id = "sbl";
 var sender = null;
@@ -57,6 +58,10 @@ s.on("online_users", function (users) {
   online_users = users;
 });
 
+s.on("disconnect", function () {
+  online_users = [];
+});
+
 ipcMain.on("sign_up", function (e, uuid_, username_) {
   sender = e.sender;
   username = username_;
@@ -79,9 +84,17 @@ s.on("opponet_disconnected", function (opponet) {
   s.emit("get_online_users");
 });
 
+s.on("reconnect", function () {
+  if (typeof (uuid) === "string" && uuid.length > 5 && typeof(username) === "string" && username.length > 2) {
+      s.emit("update_status", uuid, status_save, op_save);
+  }
+});
+
 ipcMain.on("update_status", function (e, status, op) {
   sender = e.sender;
   if (op === undefined) op = null;
+  status_save = status;
+  op_save = op;
   s.emit("update_status", uuid, status, op);
   s.emit("get_online_users");
 });
