@@ -1,6 +1,5 @@
 var User = require('./user.js').User;
-var load = require("./user.js").load;
-var get_name = require("./user.js").get_name;
+var load = require("./user.js").load; var get_name = require("./user.js").get_name;
 var get_uuid = require("./user.js").get_uuid;
 
 
@@ -16,11 +15,25 @@ load();
 
 name2user = {};
 
+function get_online_users() {
+    for (var key in name2user) {
+        if (name2user[key].status === "online" || name2user[key].status === "fighting") {
+            r.push({name: key, status: name2user[key].status});
+        }
+    }
+}
+
+function broadcast_online_users(socket) {
+    var r = get_online_users();
+    socket.emit("online_users", r);
+    socket.broadcast.emit("online_users", r);
+}
+
 io.on("connection", function(socket) {
     var user = null;
 
     socket.on("sign_up", function (uuid, username_) {
-        if (get_uuid(username_) === undefined) {
+        if (typeof (username_) == "string" && get_uuid(username_) === undefined) {
             user = new User(uuid);
             user.name = username_;
             user.socket = socket;
@@ -106,18 +119,13 @@ io.on("connection", function(socket) {
                     user.opponent = null;
                 }
             }
-
             console.log(name2user);
         }, 10000);
     });
 
     socket.on("get_online_users", function() {
-        var r = []
-        for (var key in name2user) {
-            if (name2user[key].status === "online" || name2user[key].status === "fighting") {
-                r.push({name: key, status: name2user[key].status});
-            }
-        }
+        var r = get_online_users();
         socket.emit("online_users", r);
+        console.log(r);
     });
 });
