@@ -133,7 +133,7 @@ ipcMain.on("debug", function (e, msg) {
   console.log(x.getTime() + msg);
 });
 
-s.on("forward", function (cmd, args, gmae_id) {
+s.on("forward", function (cmd, args, game_id) {
   console.log("forward: " + cmd + " " + args + " " + game_id);
   if (cmd == "do_operation" || cmd == "set_g" || cmd == "set_config") {
     if (game_id !== game_id_save) {
