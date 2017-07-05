@@ -41,6 +41,9 @@ function start(){
             buttons:{
                 ok:{
                     btnClass : 'nosee',
+                    action: function(){
+                        start();
+                    }
                 }
             },
             onOpenBefore: function () {
