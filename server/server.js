@@ -35,11 +35,13 @@ function gen_uuid(){
 }
 
 function get_online_users() {
+    var r = [];
     for (var key in name2user) {
         if (name2user[key].status === "online" || name2user[key].status === "fighting") {
             r.push({name: key, status: name2user[key].status});
         }
     }
+    return r;
 }
 
 function broadcast_online_users(socket) {
