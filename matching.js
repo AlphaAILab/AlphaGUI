@@ -130,7 +130,7 @@ function process_start() {
             if (myid < opid && is_ready  && op_is_ready) {
                 ipc.send("start", opid);
             }
-        }, 3000);
+        }, 2000);
     } else {
         if (start_timer) clearTimeout(start_timer);
     }
@@ -148,7 +148,7 @@ function reigster_set_config() {
         $("#optype").text(op_config.type);
         $("#ophideB").text(op_config.hide);
         $("#oproundtime").text(op_config.roundtime);
-        $("#opaiwaittime").text(op_config.aiwaittime);
+        $("#opaiwaittime").text(op_config.aiwaittime/1000);
         $("#opisready").text(op_config.is_ready);
         
         op_is_ready = op_config.is_ready;
@@ -338,6 +338,12 @@ function start(){
             })
         });
         reigster_set_config();
+
+        setInterval(function() {
+            if (is_ready) {
+                save_settings();
+            }
+        }, 500);
     }
     if(A_is_ai && B_is_ai){
         hideB = false;
