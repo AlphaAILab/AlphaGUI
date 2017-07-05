@@ -30,6 +30,7 @@ ipcMain.on("match", function (e, toname) {
 
 s.on("matched", function (op, game_id) {
   game_id_save = game_id;
+  console.log(game_id_save);
   console.log("jump to matching.html");
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'matching.html'),
@@ -66,7 +67,7 @@ s.on("start", function (game_id, op, config) {
     bbbb.A_is_human = 'aaa'
   }
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'matching.html'),
+    pathname: path.join(__dirname, 'arena.html'),
     search: params(bbbb),
     protocol: 'file:',
     slashes: true
