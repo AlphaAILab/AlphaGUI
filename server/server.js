@@ -122,7 +122,7 @@ io.on("connection", function(socket) {
             user.opponent = op;
             user.status = "fighting";
             touser.opponent = user.name;
-            tosockettatus = "fighting";
+            touser.status = "fighting";
             touser.socket.emit("matched", user.name, game_id);
             socket.emit("matched", op);
         }
