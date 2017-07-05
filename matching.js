@@ -114,7 +114,7 @@ function get_my_param(){
         ret.type = 'human';
     }else if(A_is_ai){
         ret.type = 'ai';
-        ret.botid = A.botid;
+        ret.botid = Abot.botid;
     }
     ret.roundtime = Aroundtime;
     ret.hide = hideB;
@@ -126,7 +126,8 @@ function get_my_param(){
 function process_start() {
     if (is_ready && op_is_ready) {
         start_timer = setTimeout(function() {
-            if (is_ready  && op_is_ready) {
+            console.log('send start');
+            if (myid < opid && is_ready  && op_is_ready) {
                 ipc.send("start", opid);
             }
         }, 3000);
@@ -137,7 +138,7 @@ function process_start() {
 
 function send_config() {
     let config = get_my_param();
-    ipc.send("forward", "set_config", opid, config);
+    ipc.send("forward", opid, "set_config", config);
 
     process_start();
 }
@@ -211,11 +212,11 @@ function click_remote_play() {
     if (is_ready) {
         is_ready = false;
         $("#play").text("ready");
-        $("#btn-save").hide();
+        $("#btn-save").show();
     } else {
         is_ready = true;
         $("#play").text("cancel");
-        $("#btn-save").show();
+        $("#btn-save").hide();
     }
 
     send_config();

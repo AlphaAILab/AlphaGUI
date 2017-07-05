@@ -29,7 +29,7 @@ ipcMain.on("match", function (e, toname) {
 });
 
 s.on("matched", function (op, game_id) {
-  gmae_id_save = game_id;
+  game_id_save = game_id;
   console.log("jump to matching.html");
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'matching.html'),
