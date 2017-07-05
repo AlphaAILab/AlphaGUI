@@ -47,12 +47,11 @@ function start(){
                 $('.nosee').hide();
             },
         });
-
+    } else {
+        ipcRenderer.send("sign_up", localStorage.getItem("uuid"), username);
+        ipcRenderer.send("update_status", "online", null );
     }
 
-
-    ipcRenderer.send("sign_up", localStorage.getItem("uuid"), username);
-    ipcRenderer.send("update_status", "online", null );
 
 
 }
@@ -71,6 +70,8 @@ function signup() {
                 title: "",
                 content: "Success!"
             });
+            ipcRenderer.send("sign_up", localStorage.getItem("uuid"), username);
+            ipcRenderer.send("update_status", "online", null );
             box.close();
         });
         ipcRenderer.on("name_be_used", function(e, username_) {
