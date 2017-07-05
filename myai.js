@@ -90,11 +90,8 @@ function click_save_ai(){
     bot.name = ai_name;
     bot.win = 0;
     bot.play_num =0;
-    $.snackbar({
-        content: "Testing AI...",
-        style: "toast",
-        timeout: snackbar_time
-    })
+
+
     // bot.test
     // call back ok and below
 
@@ -112,6 +109,11 @@ function click_save_ai(){
     render_init();
     select_bot = 0;
     render_right(bot);
+    $.snackbar({
+        content: "AI Saved.",
+        style: "toast",
+        timeout: snackbar_time
+    })
 
 }
 function clear_right(){

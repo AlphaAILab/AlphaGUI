@@ -13,12 +13,55 @@ function get_online(callback){
 }
 
 function click_online(name){
-    $.alert('click online'+name);
-}
-function click_playing(name){
-    $.alert('click playing'+name);
+    var username = localStorage.getItem('username');
+    if(name === username ){
+        $.alert('Try to click other player!');
+        return;
+    }else{
+        $.confirm({
+            title: 'Play with '+name+'!',
+            content : 'Click OK to invite '+name+'.',
+            buttons:{
+                OK: function(){
+                    // 发邀请
 
+                    $.snackbar({
+                        content: "Invitation has been sent, waiting for "+name+" to accept.",
+                        style: "toast",
+                        timeout: 8000
+                    })
+                    console.log('click ok '+name);
+                },
+                cancel : function(){
+                    console.log('cancel it');
+                }
+            }
+        })
+    }
 }
+
+function click_playing(name){
+    var username = localStorage.getItem('username');
+    if(name === username ){
+        $.alert('Try to click other player!');
+        return;
+    }else{
+        $.confirm({
+            title: 'Watch '+name+'\'s game!',
+            content : 'Click OK to watch '+name+'\'s game.',
+            buttons:{
+                OK: function(){
+                    $.alert('Not support yet.');
+                    console.log('click ok '+name);
+                },
+                cancel : function(){
+                    console.log('cancel it');
+                }
+            }
+        })
+    }
+}
+
 function list2html(list){
     var s = '';
     for(var x of list){
@@ -36,10 +79,19 @@ function list2html(list){
 function render_online(callback){
     get_online(function (list) {
         $('#online-list').html(list2html(list));
-        if (list.length === 0) {
-            $('.online-num').text("loading...");
+        var ok = false;
+        for(var x of list){
+            var username = localStorage.getItem('username');
+            if(x.name && x.name === username){
+                ok = true;
+                break;
+            }
+        }
+
+        if (ok === false || list.length === 0) {
+            $('.online-num').text("Loading...");
         } else {
-            $('.online-num').text("Online: " + list.length);
+            $('.online-num').text("ONLINE: " + list.length);
         }
         callback();
     });
