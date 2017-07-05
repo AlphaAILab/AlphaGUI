@@ -70,9 +70,14 @@ function signup() {
         ipcRenderer.on("signup_success", function(e, username_) {
             username = username_;
             localStorage.setItem("username", username);
-            $.alert({
+            $.confirm({
                 title: "",
-                content: "Success!"
+                content: "Success!",
+                buttons:{
+                    ok:function(){
+                        location = location;
+                    }
+                }
             });
             ipcRenderer.send("sign_up", localStorage.getItem("uuid"), username);
             ipcRenderer.send("update_status", "online", null );

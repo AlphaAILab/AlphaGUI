@@ -13,7 +13,14 @@ function register_invite() {
     });
     ipcRenderer.send("register", "invite");
 }
-register_invite();
+
+function click_refuse(toname) {
+    ipcRenderer.send("forward", toname, "refuse", username);
+}
+
+function click_agree(toname) {
+    ipcRenderer.send("match", toname);
+}
 
 function get_online(callback){
     ipcRenderer.once("online_users", function (e, users) {
@@ -119,7 +126,8 @@ function click_return(){
         classie.toggle( menuLeft, 'cbp-spmenu-open' );
 }
 
-function start(){
+function online_start(){
+    register_invite();
     function try_get_online() {
         render_online(function () {
             if (online_list.length === 0) {
@@ -141,4 +149,4 @@ function start(){
     
 }
 
-$(start)
+$(online_start)

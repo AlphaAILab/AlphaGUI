@@ -15,11 +15,35 @@ var uuid = null;
 var username = "Chenyao2333";
 var status = "online";
 var online_users = [];
-
+var game_id = "sbl";
 var sender = null;
+
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
+let mainWindow
+
+ipcMain.on("match", function (e, toname) {
+  s.emit("match", toname);
+  sender = e.sender;
+});
+
+s.on("matched", function (op, _game_id) {
+  gmae_id = _game_id;
+  console.log("jump to matching.html");
+  //
+  //
+});
+
+s.on("start", function (_game_id, op_config) {
+  if (game_id !== _game_id) return;
+  console.log("jump to arena.html");
+  //
+  //
+});
 
 ipcMain.on("invite", function (e, toname) {
   s.emit("forward", toname, "invite", username);
+  sender = e.sender;
 });
 
 ipcMain.on("get_online_users", function (e) {
@@ -101,9 +125,7 @@ s.on("forward", function (cmd, args) {
 });
 
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+
 
 function createWindow () {
   // Create the browser window.
