@@ -30,6 +30,7 @@ function getBase64Image(img) {
 function do_report(a,b,c){
     // todo
     //console.log(a,b,c);
+    
 
 }
 
