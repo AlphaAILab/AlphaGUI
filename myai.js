@@ -270,6 +270,7 @@ function receive(){
             // remote info
             callback.Btype = 'remote';
             callback.B_is_remote = 'aaa';
+            callback.Bname = getUrlVar('Bname');
 
         }
         // 上面是发来的information

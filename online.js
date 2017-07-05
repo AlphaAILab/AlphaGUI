@@ -20,17 +20,20 @@ function click_online(name){
     }else{
         $.confirm({
             title: 'Play with '+name+'!',
-            content : 'Click OK to invite '+name+'.',
+            content : 'Click OK to play with '+name+'.',
             buttons:{
-                OK: function(){
-                    // 发邀请
+                OK: {
+                    btnClass:"btn btn-success btn-raised",
+                    action:function(){
+                        // 发邀请
 
-                    $.snackbar({
-                        content: "Invitation has been sent, waiting for "+name+" to accept.",
-                        style: "toast",
-                        timeout: 8000
-                    })
-                    console.log('click ok '+name);
+                        $.snackbar({
+                            content: "Invitation has been sent, waiting for "+name+" to accept.",
+                            style: "toast",
+                            timeout: 8000
+                        })
+                        console.log('click ok '+name);
+                    }
                 },
                 cancel : function(){
                     console.log('cancel it');

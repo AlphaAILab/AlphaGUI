@@ -49,6 +49,8 @@ function click_human(){
 
 function click_A_ai(){
     // choose ai
+    A_is_ai = true;
+    A_is_human = false;
 
     var param = {
         url:'aaa',
@@ -64,8 +66,7 @@ function click_A_ai(){
     if(B_is_remote){
         param.Btype = 'remote';
         param.B_is_remote = 'aaa';
-        // save remote status 
-        // 或者下次直接获取
+        param.Bname = opid;
 
     }
 
@@ -74,6 +75,8 @@ function click_A_ai(){
 }
 
 function click_B_ai(){
+    B_is_ai = true;
+    B_is_remote = false;
     // choose ai
     var param = {
         url:'aaa',
@@ -90,8 +93,6 @@ function click_B_ai(){
     if(A_is_human){
         param.Atype = 'human';
         param.A_is_human = 'aaa';
-        // save remote status 
-        // 或者下次直接获取
 
     }
 
@@ -100,10 +101,16 @@ function click_B_ai(){
 }
 
 function click_remote(){
+    B_is_remote = true;
+    B_is_ai = false;
     // choose online 0.0
-    
+    B_is_remote = true;
     Btype = 'remote';
     opid = 'Chenyao2333';
+    var Bcur = opid;
+    $('#Bcur').text(Bcur);
+    $('#Bid').text(opid);
+
 
     render_play();
 }
@@ -202,13 +209,21 @@ function start(){
         var botlist = JSON.parse(localStorage.getItem('botlist'));
         Bbot = botlist[B_ai_id];
         Bcur = 'AI '+Bbot.name;
-        // do something ai
     }
     if(B_is_remote){
         Btype = 'remote';
         opid = getUrlVar('Bname');
         // do something remote
         Bcur = opid;
+        $('#notonlineop').hide();
+        $('#onlineop').show();
+        
+        $('#optype').text('not choose');
+        $('#oproundtime').text('not choose');
+        $('#ophideB').text('not choose');
+        $('#opaiwaittime').text('not choose');
+
+        // get 对方信息 更新显示以及本地变量
 
     }
 
@@ -217,6 +232,9 @@ function start(){
 
     $('#Aid').text(myid);
     $('#Bid').text('Opponent');
+    if(B_is_remote){
+        $('#Bid').text(opid);
+    }
     $('#Acur').text(Acur);
     $('#Bcur').text(Bcur);
 
