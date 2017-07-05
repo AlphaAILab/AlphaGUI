@@ -107,7 +107,8 @@ function render_online(callback){
         } else {
             $('.online-num').text("ONLINE: " + list.length);
         }
-        callback();
+
+        if (callback) callback();
     });
 }
 
