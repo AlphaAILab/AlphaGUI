@@ -1,32 +1,17 @@
 'use strict'
 
+var {ipcRenderer} = require("electron");
+
 var online_list = [];
 
-function get_online(){
-    // todo
-
-    //test code
-    online_list = [];
-    for(var x =0 ; x<=13 ; x++){
-        online_list.push({
-            name: 'Friend'+x,
-            status : 'online'
-        })
-    }
-    // for(var x =0 ; x<=13 ; x++){
-    //     online_list.push({
-    //         name: 'Hahaha'+x,
-    //         status : 'offline'
-    //     })
-    // }
-    for(var x =0 ; x<=13 ; x++){
-        online_list.push({
-            name: 'mmmmmmmmmmmm'+x,
-            status : 'Playing'
-        })
-    }
-    return online_list;
+function get_online(callback){
+    ipcRenderer.on("online_users", function (e, users) {
+        online_list = users;
+        callback(online_list);
+    });
+    ipcRenderer.send("get_online_users");
 }
+
 function click_online(name){
     $.alert('click online'+name);
 }
@@ -48,10 +33,16 @@ function list2html(list){
     return s;
 }
 
-function render_online(){
-    var list = get_online();
-    $('#online-list').html(list2html(list));
-    $('.online-num').text(list.length);
+function render_online(callback){
+    get_online(function (list) {
+        $('#online-list').html(list2html(list));
+        if (list.length === 0) {
+            $('.online-num').text("loading...");
+        } else {
+            $('.online-num').text("Online: " + list.length);
+        }
+        callback();
+    });
 }
 
 function click_return(){
@@ -62,8 +53,16 @@ function click_return(){
 }
 
 function start(){
-    get_online();
-    render_online();
+    function try_get_online() {
+        render_online(function () {
+            if (online_list.length === 0) {
+                setTimeout(try_get_online, 500);
+            }
+        });
+    }
+    try_get_online();
+    setInterval(render_online, 10000);
+
     var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
         showLeft = document.getElementById( 'showLeft' ),
         body = document.body;
