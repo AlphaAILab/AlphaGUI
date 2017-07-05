@@ -90,11 +90,8 @@ function click_save_ai(){
     bot.name = ai_name;
     bot.win = 0;
     bot.play_num =0;
-    $.snackbar({
-        content: "Testing AI...",
-        style: "toast",
-        timeout: snackbar_time
-    })
+
+
     // bot.test
     // call back ok and below
 
@@ -112,6 +109,11 @@ function click_save_ai(){
     render_init();
     select_bot = 0;
     render_right(bot);
+    $.snackbar({
+        content: "AI Saved.",
+        style: "toast",
+        timeout: snackbar_time
+    })
 
 }
 function clear_right(){
@@ -268,6 +270,7 @@ function receive(){
             // remote info
             callback.Btype = 'remote';
             callback.B_is_remote = 'aaa';
+            callback.Bname = getUrlVar('Bname');
 
         }
         // 上面是发来的information
@@ -282,7 +285,7 @@ $(function(){
     $.snackbar({
         content: "You can select an AI from left panel.", 
         style: "toast", 
-        timeout: snackbar_time
+        timeout: 8000
     })
 });
 

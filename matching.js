@@ -1,6 +1,6 @@
 'use strict'
 
-var myid = "Ruotian";
+var myid = localStorage.getItem('username');
 var A_is_ai ;
 var A_ai_id ;
 var A_is_human ;
@@ -14,6 +14,8 @@ var Aroundtime = 100;
 var Broundtime = 20;
 var hideB = true;
 var AI_wait_time =200;// ms
+var opid = 'zrt';
+var if_hide_b = true;
 
 function getUrlVar(key){
 	var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
@@ -47,6 +49,8 @@ function click_human(){
 
 function click_A_ai(){
     // choose ai
+    A_is_ai = true;
+    A_is_human = false;
 
     var param = {
         url:'aaa',
@@ -62,8 +66,7 @@ function click_A_ai(){
     if(B_is_remote){
         param.Btype = 'remote';
         param.B_is_remote = 'aaa';
-        // save remote status 
-        // 或者下次直接获取
+        param.Bname = opid;
 
     }
 
@@ -72,6 +75,8 @@ function click_A_ai(){
 }
 
 function click_B_ai(){
+    B_is_ai = true;
+    B_is_remote = false;
     // choose ai
     var param = {
         url:'aaa',
@@ -88,8 +93,6 @@ function click_B_ai(){
     if(A_is_human){
         param.Atype = 'human';
         param.A_is_human = 'aaa';
-        // save remote status 
-        // 或者下次直接获取
 
     }
 
@@ -98,8 +101,18 @@ function click_B_ai(){
 }
 
 function click_remote(){
+    B_is_remote = true;
+    B_is_ai = false;
     // choose online 0.0
+    B_is_remote = true;
+    Btype = 'remote';
+    opid = 'Chenyao2333';
+    var Bcur = opid;
+    $('#Bcur').text(Bcur);
+    $('#Bid').text(opid);
 
+
+    render_play();
 }
 
 
@@ -110,7 +123,6 @@ function render_play(){
         $('#play').attr('href','./arena.html?'+$.param({
             url : 'aaaa',
             game_type : 'human_ai',
-            Aname : myid,
             Bname : 'AI:'+Bbot.name,
             Agid : 0,
             Bgid : 1,
@@ -123,7 +135,6 @@ function render_play(){
     }else if(Atype === 'ai' && Btype === 'ai'){
         $('#play').attr('href','./arena.html?'+$.param({
             url : 'aaaa',
-            myid :myid,
             game_type : 'ai_ai',
             Aname : 'AI:'+Abot.name,
             Bname : 'AI:'+Bbot.name,
@@ -136,12 +147,36 @@ function render_play(){
             Abotid : Abot.botid,
             Bbotid : Bbot.botid
         }))
+    }else if(Atype === 'ai' && Btype === 'remote'){
+        $('#play').attr('href','./arena.html?'+$.param({
+            url : 'aaaa',
+            game_type : 'online',
+            Aname : myid,
+            Bname : opid,
+            Aroundtime : Aroundtime,
+            Broundtime : Broundtime,
+            AIwaittime : AI_wait_time,
+            hideB : if_hide_b,
+            Abotid : Abot.botid,
+            A_is_ai:'aaa'
+        }))
+    }else if(Atype === 'human' && Btype === 'remote'){
+        $('#play').attr('href','./arena.html?'+$.param({
+            url : 'aaaa',
+            game_type : 'online',
+            Aname : myid,
+            Bname : opid,
+            Aroundtime : Aroundtime,
+            Broundtime : Broundtime,
+            AIwaittime : AI_wait_time,
+            hideB : if_hide_b,
+            A_is_human:'aaa'
+        }))
     }
 
 }
 
 function start(){
-    myid = getUrlVar('myid') || "Ruotian";
     A_is_ai = testurl('A_is_ai');
     A_ai_id = -1;
     if(A_is_ai){
@@ -174,11 +209,21 @@ function start(){
         var botlist = JSON.parse(localStorage.getItem('botlist'));
         Bbot = botlist[B_ai_id];
         Bcur = 'AI '+Bbot.name;
-        // do something ai
     }
     if(B_is_remote){
         Btype = 'remote';
+        opid = getUrlVar('Bname');
         // do something remote
+        Bcur = opid;
+        $('#notonlineop').hide();
+        $('#onlineop').show();
+        
+        $('#optype').text('not choose');
+        $('#oproundtime').text('not choose');
+        $('#ophideB').text('not choose');
+        $('#opaiwaittime').text('not choose');
+
+        // get 对方信息 更新显示以及本地变量
 
     }
 
@@ -187,6 +232,9 @@ function start(){
 
     $('#Aid').text(myid);
     $('#Bid').text('Opponent');
+    if(B_is_remote){
+        $('#Bid').text(opid);
+    }
     $('#Acur').text(Acur);
     $('#Bcur').text(Bcur);
 

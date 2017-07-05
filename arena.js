@@ -18,10 +18,6 @@ B.score=0;
 A.type = "human"
 B.type = "remote"
 
-ipcRenderer.send("sign_up", localStorage.getItem("uuid"), A.name);
-ipcRenderer.send("update_status", "fighting", B.name);
-
-
 // remote
 A.roundtime = 2;
 B.roundtime = 100;
@@ -45,14 +41,6 @@ var game_type;
 // 排序
 // 观战
 // 防止双开
-
-ipcRenderer.once("opponet_disconnected", function(e, op) {
-    if (op === B.name) {
-        _op_timeout = true;
-        A.score = 40;
-        start();
-    }
-});
 
 
 
@@ -525,6 +513,7 @@ function start(){
             ipcRenderer.send("forward", B.name, "set_g", g);
             A.gid = 0;
             B.gid = 1;
+            _do();
         } else {
             A.gid = 1;
             B.gid = 0;
@@ -567,7 +556,6 @@ function receive(){
             B.botid = botid;
 
             // back
-            backparam.myid = A.name;
             backparam.A_is_human = 'aaa';
             backparam.B_is_ai = 'aaa';
             backparam.B_ai_id = botid;
@@ -596,7 +584,6 @@ function receive(){
             B.bot_path = botlist[Bbotid].bot_path;
             B.botid = Bbotid;
 
-            backparam.myid = getUrlVar('myid');
             backparam.A_is_ai = 'aaa';
             backparam.A_ai_id = Abotid;
             backparam.B_is_ai = 'aaa';
@@ -608,6 +595,61 @@ function receive(){
             //A.roundtime = 30;
             //round_wait_time = 100;
             //return_wait_time = 100;
+
+        }else if(game_type === 'online'){
+            A.name = getUrlVar('Aname');
+            B.name = getUrlVar('Bname');
+            A.gid = 0;
+            B.gid =1;
+            A.roundtime =parseInt(getUrlVar('Aroundtime'));
+            B.roundtime = parseInt(getUrlVar('Broundtime'));
+            AI_wait_time = parseInt(getUrlVar('AIwaittime'));
+
+            var _hideB = getUrlVar('hideB');
+            if(_hideB === "true") hideB = true;
+            else if(_hideB === "false") hideB = false;
+            else{
+                console.log('[!] _hideB: ',_hideB);
+            }
+            if(testurl('A_is_ai')){
+                A.type = 'bot';
+            }else if(testurl('A_is_human')){
+                A.type = 'human';
+            }else{
+                console.log('[!] unknow A type');
+            }
+            B.type = 'remote';
+            if(A.type === 'bot'){
+                var Abotid = parseInt(getUrlVar('Abotid'));
+                var botlist = JSON.parse(localStorage.getItem('botlist'));
+                A.bot_path = botlist[Abotid].bot_path;
+                A.botid = Abotid;
+                
+            }
+            if(A.type === 'bot'){
+                backparam.A_is_ai = 'aaa';
+                backparam.A_ai_id = A.botid;
+            }else{
+                backparam.A_is_human = 'aaa';
+            }
+            backparam.B_is_remote = 'aaa';
+            backparam.Bname = B.name;
+
+            if(_op_timeout){
+                backparam = {};
+            }
+
+            ipcRenderer.send("sign_up", localStorage.getItem("uuid"), A.name);
+            ipcRenderer.send("update_status", "fighting", B.name);
+
+
+            ipcRenderer.once("opponet_disconnected", function(e, op) {
+                if (op === B.name) {
+                    _op_timeout = true;
+                    A.score = 40;
+                    start();
+                }
+            });
 
         }
         

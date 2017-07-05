@@ -14,6 +14,25 @@ server.listen(23333);
 load();
 
 name2user = {};
+kv = {};
+
+function gen_uuid(){
+    var ch = [];
+    for(var x = 0 ; x<9;x++) ch.push(x);
+    var tmp = "abcdefghijklmnopqrstuvwxyz";
+    for(var x = 0 ; x<tmp.length; x++){
+        ch.push(tmp[x]);
+    }
+    tmp = tmp.toUpperCase();
+    for(var x = 0; x<tmp.length;x++){
+        ch.push(tmp[x]);
+    }
+    var uuid = '';
+    for(var x = 0;x<8;x++){
+        uuid += ch[parseInt(Math.random()*ch.length)];
+    }
+    return uuid;
+}
 
 function get_online_users() {
     for (var key in name2user) {
@@ -76,6 +95,12 @@ io.on("connection", function(socket) {
             socket.emit("forward_failed", toname);
         } else {
             console.log("forward");
+            if (cmd === "set_config") {
+                if (tyeof(args.game_id) === "string" && args.game_id.length > 4) {
+                    kv[args.game_id][user.name] = args.config;
+                }
+            }
+
             touser.socket.emit("forward", cmd, args);
         }
     });
@@ -91,12 +116,21 @@ io.on("connection", function(socket) {
         touser.opponent !== null || user.opponent !== null) {
             socket.emit("match_failed");
         } else {
+            var game_id = gen_uuid();
             user.opponent = op;
             user.status = "fighting";
             touser.opponent = user.name;
             touser.status = "fighting";
             user.emit("matched", op);
-            touser.emit("matched", user.name);
+            touser.emit("matched", user.name, game_id);
+        }
+    });
+
+    socket.on("start", function(toname, gmae_id) {
+        var touser = name2user[toname];
+        if (toname && toname.socket) {
+            touser.socket.emit("start", game_id, op_name, kv[game_id]);
+            socket.emit("start", game_id, op_name, kv[game_id]);
         }
     });
 

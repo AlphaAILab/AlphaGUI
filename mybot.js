@@ -13,6 +13,12 @@ function Bot(bot_path) {
     //this.created_time = info.created_time;
 }
 
+function bot_destructor() {
+    try {this.child.kill("SIGKILL");} catch (e) {}
+    try {fs.close(this.fd_in);} catch (e) {}
+    try {fs.close(this.fd_out);} catch (e) {}
+}
+
 function _save() {
     localStorage.setItem(this.bot_path, {
         "name": this.name,
@@ -43,6 +49,10 @@ function _run(input, timelimit, callback) {
         var fd_out = fs.openSync(output_file, "w");
         var child = spawn(bot_path, {stdio: [fd_in, fd_out, fd_out], cwd: bot_dir});
         var closed = false;
+        
+        this.child = child;
+        this.fd_in = fd_in;
+        this.fd_out = fd_out;
     } catch (e) {
         console.log(e);
         callback(e, card, rule_card);
@@ -100,6 +110,7 @@ function _run(input, timelimit, callback) {
 
 Bot.prototype = {
     constructor: Bot,
+    destructor: bot_destructor,
     run: _run,
     save: _save
 }

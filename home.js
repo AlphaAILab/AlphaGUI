@@ -3,6 +3,7 @@
 var ipcRenderer = require("electron").ipcRenderer;
 var uuid;
 var username;
+var polling_time = 2000;
 
 function gen_uuid(){
     var ch = [];
@@ -41,13 +42,18 @@ function start(){
             buttons:{
                 ok:{
                     btnClass : 'nosee',
+                    action: function(){
+                        start();
+                    }
                 }
             },
             onOpenBefore: function () {
                 $('.nosee').hide();
             },
         });
-
+    } else {
+        ipcRenderer.send("sign_up", localStorage.getItem("uuid"), username);
+        ipcRenderer.send("update_status", "online", null );
     }
 
 
@@ -64,10 +70,17 @@ function signup() {
         ipcRenderer.on("signup_success", function(e, username_) {
             username = username_;
             localStorage.setItem("username", username);
-            $.alert({
+            $.confirm({
                 title: "",
-                content: "Success!"
+                content: "Success!",
+                buttons:{
+                    ok:function(){
+                        location = location;
+                    }
+                }
             });
+            ipcRenderer.send("sign_up", localStorage.getItem("uuid"), username);
+            ipcRenderer.send("update_status", "online", null );
             box.close();
         });
         ipcRenderer.on("name_be_used", function(e, username_) {
