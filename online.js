@@ -16,7 +16,7 @@ function register_invite() {
 register_invite();
 
 function get_online(callback){
-    ipcRenderer.on("online_users", function (e, users) {
+    ipcRenderer.once("online_users", function (e, users) {
         online_list = users;
         callback(online_list);
     });
