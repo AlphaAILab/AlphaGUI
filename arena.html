@@ -19,6 +19,9 @@
     <link href="./static/css/snackbar.min.css" rel="stylesheet">
 
     <link href="./static/css/jquery-confirm.min.css" rel="stylesheet">
+    <link href="./static/css/component.css" rel="stylesheet">
+    <link href="./static/css/online.css" rel="stylesheet">
+
     <style>
       .card-lg{
           width:60px;
@@ -46,6 +49,14 @@
       }
       .highlight img{
         box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      }
+      #bug{
+        position: absolute;
+        right: 20px;
+        bottom: 30px;
+      }
+      .nosee{
+        display: none;
       }
     </style>
 </head>
@@ -117,7 +128,22 @@
 </div>
 
 
+<a id="bug" class="btn"  href="#" onclick="bug();"><i class="material-icons">bug_report</i> </a>
+<div id = "online" style="display:none;">
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="overflow-y:scroll;">
+			<h3>Online Player</h3>
+      <a onclick="click_return();"><i class="material-icons">arrow_back</i> <span class="">BACK</span></a>
+      <div id="online-list" >
+      </div>
+		</nav>
+    <button id="showLeft" class="online-num btn btn-success btn-raised" style="position:absolute;left:20px;top:60px;"></button>
+</div>
+
 <script>window.$ = window.jQuery = require('./static/js/jquery.min');</script>
+
+<script src="./bugreporter.js"> </script>
+<script src="./static/js/classie.js"></script>
+<script src="./online.js"> </script>
 
 <script src="./static/js/bootstrap.min.js"></script>
 <script src="./static/js/jquery-confirm.min.js"></script>

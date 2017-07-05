@@ -19,6 +19,8 @@
     <link href="./static/css/snackbar.min.css" rel="stylesheet">
 
     <link href="./static/css/jquery-confirm.min.css" rel="stylesheet">
+    <link href="./static/css/component.css" rel="stylesheet">
+    <link href="./static/css/online.css" rel="stylesheet">
     
     <style>
     #back{
@@ -40,6 +42,14 @@
         top:160px;
         left:340px;
       }
+      #bug{
+        position: absolute;
+        right: 20px;
+        bottom: 10px;
+      }
+      .nosee{
+        display: none;
+      }
     </style>
 </head>
 <body>
@@ -50,9 +60,37 @@
     <div class = "well infobox" style="width: 90%; height:70%; margin: auto; margin-top: 5%;">
       <h3 id="Aid"></h3>
       <div class="text-center"> 
-      <a  class="btn btn-info btn-raised" style="margin-top:60px;width:200px;" onclick="click_human();"><i class="material-icons">face</i>Human Wisdom </a>
-      <a  class="btn btn-primary btn-raised" style="margin-top:20px;width:200px;" onclick="click_A_ai();"><i class="material-icons">computer</i>USE AI </a> 
-      <a  class="btn btn-success disabled" style="margin-top:20px;width:200px;">Current: <span id="Acur"></span></a>
+      <a  class="btn btn-info btn-raised" style="margin-top:10px;width:200px;" onclick="click_human();"><i class="material-icons">face</i>Human Wisdom </a>
+      <br>
+      <a  class="btn btn-primary btn-raised" style="margin-top:0px;width:200px;" onclick="click_A_ai();"><i class="material-icons">computer</i>USE AI </a> 
+      <br>
+      <a  style="margin-top:0px;width:200px;">Current: <span id="Acur"></span></a>
+      
+      </div>
+      <div class="" style="width:80%;margin:auto">
+      <form class="form"  >
+        <fieldset>
+          <div class="form-group">
+            <div class="row">
+       <span class="col-sm-10"> HIDE HANDS:</span>  <div class="togglebutton col-sm-2">
+          <label>
+           <input type="checkbox" checked id="hidehands">  
+          </label>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-sm-9"> ROUND TIME:</div> <div class="col-sm-3"><input class="form-control " value="2" id="roundtime"></div>
+        </div>
+        <div class="row"> 
+        <div class="col-sm-9 "> AI EXTRA ANIMATION TIME: </div><div class="col-sm-3"><input  class="form-control " value="0.1" id="aiwaittime"></div>
+        </div>
+        <div class="text-center">
+        <button type="button" class="btn btn-success"  id = "btn-save" onclick = "save_settings();"> save settings</button>
+        </div>
+        </div>
+        </fieldset>
+        
+      </form>
       </div>
     </div>
   </div>
@@ -63,9 +101,10 @@
       <div class="text-center"> 
         <div id="notonlineop">
 
-      <a  class="btn btn-info btn-raised" style="margin-top:60px;width:200px;" onclick="click_remote();"><i class="material-icons">supervisor_account</i>ONLINE PLAYER </a>
+      <a  class="btn btn-info btn-raised" style="margin-top:60px;width:200px;" onclick="click_remote();"><i class="material-icons">supervisor_account</i>PLAY <span class="online-num"></span> </a>
       <a  class="btn btn-primary btn-raised" style="margin-top:20px;width:200px;" onclick="click_B_ai();"> <i class="material-icons">computer</i>USE LOCAL AI </a> 
       <a class="btn btn-success disabled" style="margin-top:20px;width:200px;">Current: <span id="Bcur"></span></a>
+      
           </div>
         <div id="onlineop" style="display:none;">
           <a class="btn btn-success disabled" style="margin-top:20px;width:200px;">Type: <span id="optype"></span></a>
@@ -88,7 +127,22 @@
 <a id="back" class="btn btn-raised btn-primary"  href="./home.html"><i class="material-icons">arrow_back</i> </a>
 <img id="vs" src="./static/img/vs.png"> 
 
+<a id="bug" class="btn"  href="#" onclick="bug();"><i class="material-icons">bug_report</i> </a>
+<div id = "online">
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="overflow-y:scroll;">
+			<h3>Online Player</h3>
+      <a onclick="click_return();"><i class="material-icons">arrow_back</i> <span class="">BACK</span></a>
+      <div id="online-list" >
+      </div>
+		</nav>
+    <!--<button id="showLeft" class="online-num btn btn-success btn-raised" style="position:absolute;left:20px;bottom:70px;"></button>-->
+</div>
+
 <script>window.$ = window.jQuery = require('./static/js/jquery.min');</script>
+
+<script src="./bugreporter.js"> </script>
+<script src="./static/js/classie.js"></script>
+<script src="./online.js"> </script>
 
 <script src="./static/js/bootstrap.min.js"></script>
 <script>

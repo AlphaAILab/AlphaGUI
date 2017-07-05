@@ -1,5 +1,6 @@
 'use strict'
 
+var polling_time = 2000;
 var {ipcRenderer} = require("electron");
 
 var online_list = [];

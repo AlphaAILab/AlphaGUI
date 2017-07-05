@@ -40,8 +40,13 @@ function click_human(){
     A_is_ai = false;
     A_is_human = true;
     Atype = 'human'
+    
+    Aroundtime = 100;
+    $('#roundtime').val(100);
 
     $('#Acur').text('human');
+
+    save_settings();
 
     render_play();
 
@@ -99,20 +104,62 @@ function click_B_ai(){
     location.href = './myai.html?'+$.param(param);
 
 }
+function get_my_param(){
+    var ret = {};
+    if(A_is_human){
+        ret.type = 'human';
+    }else if(A_is_ai){
+        ret.type = 'ai';
+    }
+    ret.roundtime = Aroundtime;
+    ret.hide = hideB;
+    ret.aiwaittime = AI_wait_time;
+    return ret;
+}
+
+function save_settings(){
+    if($('#hidehands').attr('checked') === 'checked'){
+        hideB =true;
+    }else{
+        hideB = false;
+    }
+    var x =  $('#roundtime').val();
+    try{x = parseInt(x);}catch(e){}
+    if(typeof(x) === 'number' && x>=1 && x<=200){
+        Aroundtime = Broundtime = x;
+    }else{
+        x=2;
+    }
+    $('#roundtime').val(x);
+
+    var y = $('#aiwaittime').val();
+    if(typeof(y) === 'number' && y>=0 && y<=5){
+        AI_wait_time = y*1000;
+    }else{
+        y=0.1;
+    }
+    try{y = parseFloat(y);}catch(e){};
+    $('#aiwaittime').val(y);
+
+    console.log(get_my_param());
+}
 
 function click_remote(){
-    B_is_remote = true;
-    B_is_ai = false;
-    // choose online 0.0
-    B_is_remote = true;
-    Btype = 'remote';
-    opid = 'Chenyao2333';
-    var Bcur = opid;
-    $('#Bcur').text(Bcur);
-    $('#Bid').text(opid);
+    // B_is_remote = true;
+    // B_is_ai = false;
+    // // choose online 0.0
+    // B_is_remote = true;
+    // Btype = 'remote';
+    // opid = 'Chenyao2333';
+    // var Bcur = opid;
+    // $('#Bcur').text(Bcur);
+    // $('#Bid').text(opid);
 
 
-    render_play();
+    // render_play();
+
+    click_return();
+
 }
 
 
@@ -198,10 +245,17 @@ function start(){
         Abot = botlist[A_ai_id];
         Acur = 'AI '+Abot.name;
 
+        Aroundtime = 2;
+        $('#roundtime').val(2);
+
+
     }
     if(A_is_human){
         Atype = 'human';
         Acur = 'human'
+
+        Aroundtime = 100;
+        $('#roundtime').val(100);
     }
     var Bcur = 'not choose';
     if(B_is_ai){
@@ -226,10 +280,14 @@ function start(){
         // get 对方信息 更新显示以及本地变量
 
     }
+    if(A_is_ai && B_is_ai){
+        hideB = false;
+        $('#hidehands').attr('checked',false);
+    }
 
 
 
-
+    save_settings();
     $('#Aid').text(myid);
     $('#Bid').text('Opponent');
     if(B_is_remote){

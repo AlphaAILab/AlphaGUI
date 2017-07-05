@@ -19,6 +19,8 @@
 
     <link href="./static/css/snackbar.min.css" rel="stylesheet">
     <link href="./static/css/jquery-confirm.min.css" rel="stylesheet">
+    <link href="./static/css/component.css" rel="stylesheet">
+    <link href="./static/css/online.css" rel="stylesheet">
     
     <style>
       #back{
@@ -34,6 +36,14 @@
       }
       .select{
         outline: 10px solid rgba(63, 81, 181,0.2);
+      }
+      #bug{
+        position: absolute;
+        right: 20px;
+        bottom: 10px;
+      }
+      .nosee{
+        display: none;
       }
     </style>
 </head>
@@ -108,7 +118,23 @@
 </div>
 
 <a id="back" class="btn btn-raised btn-primary" href="#" onclick="history.back(1);"><i class="material-icons">arrow_back</i> </a>
+
+<a id="bug" class="btn"  href="#" onclick="bug();"><i class="material-icons">bug_report</i> </a>
+<div id = "online">
+<nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="overflow-y:scroll;">
+			<h3>Online Player</h3>
+      <a onclick="click_return();"><i class="material-icons">arrow_back</i> <span class="">BACK</span></a>
+      <div id="online-list" >
+      </div>
+		</nav>
+    <button id="showLeft" class="online-num btn btn-success btn-raised" style="position:absolute;left:20px;top:60px;"></button>
+</div>
+
 <script>window.$ = window.jQuery = require('./static/js/jquery.min');</script>
+
+<script src="./bugreporter.js"> </script>
+<script src="./static/js/classie.js"></script>
+<script src="./online.js"> </script>
 
 <script src="./static/js/bootstrap.min.js"></script>
 
