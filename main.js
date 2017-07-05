@@ -15,8 +15,8 @@ var uuid = null;
 var username = "a";
 var status_save = "online";
 var op_save = null;
+var game_id_save = "sbl";
 var online_users = [];
-var game_id = "sbl";
 var sender = null;
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -28,21 +28,19 @@ ipcMain.on("match", function (e, toname) {
   sender = e.sender;
 });
 
-s.on("matched", function (op, _game_id) {
-  gmae_id = _game_id;
+s.on("matched", function (op, game_id) {
+  gmae_id_save = game_id;
   console.log("jump to matching.html");
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'matching.html'),
     search: '?B_is_remote=aaa&Bname='+op,
     protocol: 'file:',
     slashes: true
-  }))
-  //
-  //
+  }));
 });
 
-s.on("start", function (_game_id, op_config) {
-  if (game_id !== _game_id) return;
+s.on("start", function (game_id, op, config) {
+  if (game_id !== game_id_save) return;
   console.log("jump to arena.html");
   //
   //
@@ -108,7 +106,7 @@ ipcMain.on("update_status", function (e, status, op) {
 ipcMain.on("forward", function (e, toname, cmd, args) {
   console.log("forward out");
   sender = e.sender;
-  s.emit("forward", toname, cmd, args);
+  s.emit("forward", toname, cmd, args, game_id_save);
 });
 
 var registered = {};
@@ -135,8 +133,14 @@ ipcMain.on("debug", function (e, msg) {
   console.log(x.getTime() + msg);
 });
 
-s.on("forward", function (cmd, args) {
-  console.log("forward: " + cmd + " " + args);
+s.on("forward", function (cmd, args, gmae_id) {
+  console.log("forward: " + cmd + " " + args + " " + game_id);
+  if (cmd == "do_operation" || cmd == "set_g" || cmd == "set_config") {
+    if (game_id !== game_id_save) {
+      console.log("discard forward!");
+      return;
+    }
+  }
   buffer[cmd] = args;
   if (registered[cmd] !== undefined) {
       s_call(cmd);
