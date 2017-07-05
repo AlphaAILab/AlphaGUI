@@ -29,7 +29,8 @@ function register_refuse() {
     ipcRenderer.once("refuse", function(e, from) {
         console.log("refuese " + from);
         $.snackbar({
-            content: `${from} refused your invitation.`
+            content: `${from} refused your invitation.`,
+            timeout:8000
         })
     });
     ipcRenderer.send("register", "refuse");
@@ -37,12 +38,15 @@ function register_refuse() {
 
 function click_refuse(toname) {
     $(`#bar${toname}`).parent().parent().hide();
+    $(`#bar${toname}`).removeAttr('id');
 
     ipcRenderer.send("forward", toname, "refuse", username);
 }
 
 function click_agree(toname) {
     $(`#bar${toname}`).parent().parent().hide();
+    $(`#bar${toname}`).removeAttr('id');
+    
     ipcRenderer.send("match", toname);
 }
 
