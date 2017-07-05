@@ -25,6 +25,16 @@ function register_invite() {
     ipcRenderer.send("register", "invite");
 }
 
+function register_refuse() {
+    ipcRenderer.once("refuse", function(e, from) {
+        console.log("refuese " + from);
+        $.snackbar({
+            content: `${from} refused your invitation.`
+        })
+    });
+    ipcRenderer.send("register", "refuse");
+}
+
 function click_refuse(toname) {
     $(`#bar${toname}`).parent().parent().hide();
 
@@ -143,6 +153,7 @@ function click_return(){
 function online_start(){
     
     register_invite();
+    register_refuse();
     /*function try_get_online() {
         render_online(function () {
             if (online_list.length === 0) {
