@@ -4,21 +4,35 @@ var {ipcRenderer} = require("electron");
 
 var online_list = [];
 
+
+function receive_invite(from){
+    var options =  {
+        content: `<div id="bar${from}"><p style="font-size:1.5em">${from} want to play with you!</p> <button class="btn btn-success" onclick="click_agree('${from}')">Accept</button> <button class="btn btn-danger" onclick="click_refuse('${from}')">Refuse</button></div>`, 
+        htmlAllowed: true,
+        timeout: 12000
+    }
+    var bar = $.snackbar(options);
+    $(document).off("click","#snackbar-container .snackbar")
+}
+
 function register_invite() {
     ipcRenderer.once("invite", function(e, from) {
         // call zrt's func, received invitation
         console.log("received invitation " + from);
-
+        receive_invite(from);
         register_invite();
     });
     ipcRenderer.send("register", "invite");
 }
 
 function click_refuse(toname) {
+    $(`#bar${toname}`).parent().parent().hide();
+
     ipcRenderer.send("forward", toname, "refuse", username);
 }
 
 function click_agree(toname) {
+    $(`#bar${toname}`).parent().parent().hide();
     ipcRenderer.send("match", toname);
 }
 
@@ -127,15 +141,17 @@ function click_return(){
 }
 
 function online_start(){
+    
     register_invite();
-    function try_get_online() {
+    /*function try_get_online() {
         render_online(function () {
             if (online_list.length === 0) {
-                setTimeout(try_get_online, 500);
+                setTimeout(try_get_online, 1500);
             }
         });
     }
-    try_get_online();
+    try_get_online();*/
+    render_online();
     setInterval(render_online, polling_time);
 
     var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
