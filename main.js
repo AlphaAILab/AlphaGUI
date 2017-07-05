@@ -18,6 +18,10 @@ var online_users = [];
 
 var sender = null;
 
+ipcMain.on("invite", function (e, toname) {
+  s.emit("forward", toname, "invite", username);
+});
+
 ipcMain.on("get_online_users", function (e) {
   console.log("ipcMain.on get_online_users");
   sender = e.sender;

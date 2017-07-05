@@ -4,6 +4,17 @@ var {ipcRenderer} = require("electron");
 
 var online_list = [];
 
+function register_invite() {
+    ipcRenderer.once("invite", function(e, from) {
+        // call zrt's func, received invitation
+        console.log("received invitation " + from);
+
+        register_invite();
+    });
+    ipcRenderer.send("register", "invite");
+}
+register_invite();
+
 function get_online(callback){
     ipcRenderer.on("online_users", function (e, users) {
         online_list = users;
@@ -26,7 +37,7 @@ function click_online(name){
                     btnClass:"btn btn-success btn-raised",
                     action:function(){
                         // 发邀请
-
+                        ipcRenderer.send("invite", name);
                         $.snackbar({
                             content: "Invitation has been sent, waiting for "+name+" to accept.",
                             style: "toast",
@@ -116,7 +127,7 @@ function start(){
         });
     }
     try_get_online();
-    setInterval(render_online, 10000);
+    setInterval(render_online, polling_time);
 
     var menuLeft = document.getElementById( 'cbp-spmenu-s1' ),
         showLeft = document.getElementById( 'showLeft' ),

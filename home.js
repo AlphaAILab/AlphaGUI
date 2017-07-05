@@ -3,6 +3,7 @@
 var ipcRenderer = require("electron").ipcRenderer;
 var uuid;
 var username;
+var polling_time = 2000;
 
 function gen_uuid(){
     var ch = [];
