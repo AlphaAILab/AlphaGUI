@@ -31,6 +31,12 @@ ipcMain.on("match", function (e, toname) {
 s.on("matched", function (op, _game_id) {
   gmae_id = _game_id;
   console.log("jump to matching.html");
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'matching.html'),
+    search: '?B_is_remote=aaa&Bname='+op,
+    protocol: 'file:',
+    slashes: true
+  }))
   //
   //
 });
