@@ -50,6 +50,23 @@ function broadcast_online_users(socket) {
     socket.broadcast.emit("online_users", r);
 }
 
+function check_matching() {
+    for (var name in name2user) {
+        var user = name2user[name];
+        if (!user) continue;
+        if (!user.opponent) continue;
+        var touser = name2user[user.opponent];
+        if (!touser) continue;
+        if (!touser.socket) continue;
+        
+        if (touser.opponent !== name) {
+            user.socket.emit("opponet_disconnected", name);
+        }
+    }
+}
+
+setInterval(check_matching, 3000);
+
 io.on("connection", function(socket) {
     var user = null;
 
@@ -76,6 +93,8 @@ io.on("connection", function(socket) {
             }
             user = new User(uuid);
         }
+
+        check_matching();
         user.socket = socket;
         user.status = status;
         user.opponent = opponent;
@@ -84,7 +103,7 @@ io.on("connection", function(socket) {
         console.log(name2user);
     });
 
-    socket.on("forward", function(toname, cmd, args) {
+    socket.on("forward", function(toname, cmd, args, game_id) {
         if (user === null) {
             socket.emit("not_logged");
             return;
@@ -98,12 +117,12 @@ io.on("connection", function(socket) {
         } else {
             console.log("forward");
             if (cmd === "set_config") {
-                if (tyeof(args.game_id) === "string" && args.game_id.length > 4) {
-                    kv[args.game_id][user.name] = args.config;
+                if (tyeof(game_id) === "string" && game_id.length > 4) {
+                    kv[game_id][user.name] = args;
                 }
             }
 
-            touser.socket.emit("forward", cmd, args);
+            touser.socket.emit("forward", cmd, args, game_id);
         }
     });
 
@@ -140,23 +159,10 @@ io.on("connection", function(socket) {
         if (user === null) {
             return;
         }
-
-        user.socket = null;
-        setTimeout(function() {
-            var new_user = name2user[user.name];
-            if (new_user === undefined || new_user.socket == null) {
-                new_user.status = "offline";
-                
-                if (user.opponent) {
-                    var touser = name2user[user.opponent];
-                    if (touser !== undefined && touser.socket !== null) {
-                        touser.socket.emit("opponet_disconnected", user.name);
-                    }
-                    user.opponent = null;
-                }
-            }
-            console.log(name2user);
-        }, 10000);
+        user.opponent = null;
+        user.status = "offline";
+        check_matching();
+        console.log(name2user);
     });
 
     socket.on("get_online_users", function() {
