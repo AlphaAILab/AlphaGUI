@@ -138,11 +138,15 @@ function render_online(callback){
                 break;
             }
         }
-
-        if (ok === false || list.length === 0) {
-            $('.online-num').text("Loading...");
-        } else {
-            $('.online-num').text("ONLINE: " + list.length);
+        
+        try {
+            if (ok === false || list.length === 0) {
+                $('.online-num').text("Loading...");
+            } else {
+                $('.online-num').text("ONLINE: " + list.length);
+            }
+        } catch (e) {
+            console.log(e);
         }
 
         if (callback) callback();
@@ -175,10 +179,14 @@ function online_start(){
         showLeft = document.getElementById( 'showLeft' ),
         body = document.body;
 
-    showLeft.onclick = function() {
-        // classie.toggle( this, 'active' );
-        classie.toggle( menuLeft, 'cbp-spmenu-open' );
-    };
+    try {
+        showLeft.onclick = function() {
+            // classie.toggle( this, 'active' );
+            classie.toggle( menuLeft, 'cbp-spmenu-open' );
+        };
+    } catch (e) {
+        console.log(e);
+    }
     
 }
 

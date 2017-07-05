@@ -39,11 +39,45 @@ s.on("matched", function (op, game_id) {
   }));
 });
 
+function params(x){
+  var s="?";
+  for(var key in x){
+    s+=key+"="+x[key]+"&";
+  }
+  return s.slice(0,s.length-1);
+}
 s.on("start", function (game_id, op, config) {
   if (game_id !== game_id_save) return;
   console.log("jump to arena.html");
+  var bbbb ={
+      url:'aaa',
+      game_type:'online',
+      Aname:username,
+      Bname:op,
+      Aroundtime:config[username].roundtime,
+      Broundtime:config[op].roundtime,
+      AIwaittime:config[username].aiwaittime,
+      hideB : config[op].hide
+    }
+  if(config[username].type === 'ai'){
+    bbbb.A_is_ai = 'aaa';
+    bbbb.Abotid = config[username].botid;
+  }else{
+    bbbb.A_is_human = 'aaa'
+  }
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'matching.html'),
+    search: params(bbbb),
+    protocol: 'file:',
+    slashes: true
+  }));
   //
   //
+});
+
+ipcMain.on("start", function (e, tonmae) {
+  sender = e.sender;
+  s.emit("start", tonmae, game_id_save);
 });
 
 ipcMain.on("invite", function (e, toname) {

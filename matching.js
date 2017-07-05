@@ -1,5 +1,6 @@
 'use strict'
 
+var ipc = require("electron").ipcRenderer;
 var myid = localStorage.getItem('username');
 var A_is_ai ;
 var A_ai_id ;
@@ -14,8 +15,11 @@ var Aroundtime = 100;
 var Broundtime = 20;
 var hideB = true;
 var AI_wait_time =200;// ms
-var opid = 'zrt';
+var opid = 'bug';
 var if_hide_b = true;
+var is_ready = false;
+var op_is_ready = false;
+var start_timer = null;
 
 function getUrlVar(key){
 	var result = new RegExp(key + "=([^&]*)", "i").exec(window.location.search); 
@@ -110,19 +114,52 @@ function get_my_param(){
         ret.type = 'human';
     }else if(A_is_ai){
         ret.type = 'ai';
+        ret.botid = A.botid;
     }
     ret.roundtime = Aroundtime;
     ret.hide = hideB;
     ret.aiwaittime = AI_wait_time;
+    ret.is_ready = is_ready;
     return ret;
 }
 
-function save_settings(){
-    if($('#hidehands').attr('checked') === 'checked'){
-        hideB =true;
-    }else{
-        hideB = false;
+function process_start() {
+    if (is_ready && op_is_ready) {
+        start_timer = setTimeout(function() {
+            if (is_ready  && op_is_ready) {
+                ipc.send("start", opid);
+            }
+        }, 3000);
+    } else {
+        if (start_timer) clearTimeout(start_timer);
     }
+}
+
+function send_config() {
+    let config = get_my_param();
+    ipc.send("forward", "set_config", opid, config);
+
+    process_start();
+}
+
+function reigster_set_config() {
+    ipc.once("set_config", function (e, op_config) {
+        $("#optype").text(op_config.type);
+        $("#ophideB").text(op_config.hide);
+        $("#oproundtime").text(op_config.roundtime);
+        $("#opaiwaittime").text(op_config.aiwaittime);
+        $("#opisready").text(op_config.is_ready);
+        
+        op_is_ready = op_config.is_ready;
+
+        process_start();
+        reigster_set_config();
+    });
+    ipc.send("register", "set_config");
+}
+
+function save_settings(dont_call){
+    hideB = $('#hidehands').is(":checked");
     var x =  $('#roundtime').val();
     try{x = parseInt(x);}catch(e){}
     if(typeof(x) === 'number' && x>=1 && x<=200){
@@ -133,15 +170,23 @@ function save_settings(){
     $('#roundtime').val(x);
 
     var y = $('#aiwaittime').val();
+    try{y = parseFloat(y);}catch(e){};
     if(typeof(y) === 'number' && y>=0 && y<=5){
         AI_wait_time = y*1000;
     }else{
         y=0.1;
     }
-    try{y = parseFloat(y);}catch(e){};
     $('#aiwaittime').val(y);
 
     console.log(get_my_param());
+
+    if (!dont_call) {
+        render_play();
+    }
+
+    if (Btype == "remote") {
+        send_config();
+    }
 }
 
 function click_remote(){
@@ -162,10 +207,28 @@ function click_remote(){
 
 }
 
+function click_remote_play() {
+    if (is_ready) {
+        is_ready = false;
+        $("#play").text("ready");
+        $("#btn-save").hide();
+    } else {
+        is_ready = true;
+        $("#play").text("cancel");
+        $("#btn-save").show();
+    }
+
+    send_config();
+}
 
 
 function render_play(){
+    save_settings("sb");
     $('#play').removeAttr('href');
+    if (Btype == "remote") {
+        if (is_ready)  $("#play").text("cancel");
+        else $("#play").text("ready");
+    }
     if(Atype === 'human' && Btype === 'ai'){
         $('#play').attr('href','./arena.html?'+$.param({
             url : 'aaaa',
@@ -190,35 +253,20 @@ function render_play(){
             Aroundtime : Aroundtime,
             Broundtime : Broundtime,
             AIwaittime : AI_wait_time,
-            hideB : false,
+            hideB : hideB,
             Abotid : Abot.botid,
             Bbotid : Bbot.botid
         }))
     }else if(Atype === 'ai' && Btype === 'remote'){
-        $('#play').attr('href','./arena.html?'+$.param({
-            url : 'aaaa',
-            game_type : 'online',
-            Aname : myid,
-            Bname : opid,
-            Aroundtime : Aroundtime,
-            Broundtime : Broundtime,
-            AIwaittime : AI_wait_time,
-            hideB : if_hide_b,
-            Abotid : Abot.botid,
-            A_is_ai:'aaa'
-        }))
+        $('#play').attr('href','javascript:click_remote_play()');
     }else if(Atype === 'human' && Btype === 'remote'){
-        $('#play').attr('href','./arena.html?'+$.param({
-            url : 'aaaa',
-            game_type : 'online',
-            Aname : myid,
-            Bname : opid,
-            Aroundtime : Aroundtime,
-            Broundtime : Broundtime,
-            AIwaittime : AI_wait_time,
-            hideB : if_hide_b,
-            A_is_human:'aaa'
-        }))
+        $('#play').attr('href','javascript:click_remote_play()');
+    }else {
+        if (!Atype) {
+            $("#play").attr("href", "javascript: $.alert('Please select your AI.')");
+        } else {
+            $("#play").attr("href", "javascript: $.alert('Please select your oponenent.')");
+        }
     }
 
 }
@@ -278,7 +326,17 @@ function start(){
         $('#opaiwaittime').text('not choose');
 
         // get 对方信息 更新显示以及本地变量
-
+        ipc.on("opponet_disconnected", function (e) {
+            $.confirm({
+                content: opid + " exit the game!",
+                buttons: {
+                    ok: function() {
+                        location.href = "./home.html"
+                    }
+                }
+            })
+        });
+        reigster_set_config();
     }
     if(A_is_ai && B_is_ai){
         hideB = false;
