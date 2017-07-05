@@ -27,11 +27,12 @@ function register_invite() {
 
 function register_refuse() {
     ipcRenderer.once("refuse", function(e, from) {
-        console.log("refuese " + from);
+        console.log("refuse " + from);
         $.snackbar({
             content: `${from} refused your invitation.`,
             timeout:8000
         })
+        register_refuse();
     });
     ipcRenderer.send("register", "refuse");
 }
