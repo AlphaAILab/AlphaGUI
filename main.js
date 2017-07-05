@@ -14,8 +14,20 @@ const ipcMain = electron.ipcMain;
 var uuid = null;
 var username = "Chenyao2333";
 var status = "online";
+var online_users = [];
 
 var sender = null;
+
+ipcMain.on("get_online_users", function (e) {
+  console.log("ipcMain.on get_online_users");
+  sender = e.sender;
+  sender.send("online_users", online_users);
+  s.emit("get_online_users");
+});
+
+s.on("online_users", function (users) {
+  online_users = users;
+});
 
 ipcMain.on("sign_up", function (e, uuid_, username_) {
   sender = e.sender;
@@ -23,6 +35,7 @@ ipcMain.on("sign_up", function (e, uuid_, username_) {
   uuid = uuid_;
   console.log(uuid_ + " " + username_);
   s.emit("sign_up", uuid, username);
+  s.emit("get_online_users");
 });
 
 s.on("name_be_used", function (username_) {
@@ -35,12 +48,14 @@ s.on("signup_success", function (username_) {
 s.on("opponet_disconnected", function (opponet) {
   console.log("opponet_disconnected: " + opponet);
   sender.send("opponet_disconnected", opponet);
+  s.emit("get_online_users");
 });
 
 ipcMain.on("update_status", function (e, status, op) {
   sender = e.sender;
   if (op === undefined) op = null;
   s.emit("update_status", uuid, status, op);
+  s.emit("get_online_users");
 });
 
 ipcMain.on("forward", function (e, toname, cmd, args) {
