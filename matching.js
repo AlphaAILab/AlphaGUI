@@ -392,8 +392,15 @@ function start(){
         reigster_set_config();
 
         setInterval(function() {
+            if (is_ready) {
                 save_settings();
-        }, 1500);
+            }
+        }, 1000);
+        setInterval(function() {
+            if (!is_ready) {
+                save_settings();
+            }
+        }, 3000);
     }
 
     show_settings();
