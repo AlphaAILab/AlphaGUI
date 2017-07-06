@@ -185,7 +185,7 @@ function click_bot(bot){
     select_bot = bot;
     $('#bot'+select_bot).addClass('select');
     
-    console.log('click bot '+bot);
+    // console.log('click bot '+bot);
     render_right(botlist[bot]);
 }
 

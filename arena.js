@@ -306,7 +306,6 @@ function show_win(winner){
 
 function do_timeout(X,do_operation) {
     $('#clock'+X.x).text('timeout!');
-    console.log(X);
     if(X.type === 'remote' || X.type === 'bot' ){
         //不用干
     }else{
@@ -535,7 +534,7 @@ function receive(){
     if(url){
         game_type = getUrlVar('game_type');
         if(game_type === 'human_ai'){
-            A.name = getUrlVar('Aname');
+            A.name = localStorage.getItem('username');
             B.name = getUrlVar('Bname');
             A.gid = parseInt(getUrlVar('Agid'))
             B.gid = parseInt(getUrlVar('Bgid'));
