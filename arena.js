@@ -18,6 +18,7 @@ B.score=0;
 A.type = "human"
 B.type = "remote"
 
+var orderby = localStorage.getItem('orderby');
 // remote
 A.roundtime = 2;
 B.roundtime = 100;
@@ -100,6 +101,30 @@ function arrcopy(ret,a){ // ret must be []
 
 function hands2html(arr, hide, selectable){
     if(typeof(arr) === 'number') arr = g.hands[arr];
+    if(orderby === 'number'){
+        // number
+        arr.sort(function(a,b){
+            var xa = parseInt(a/10);
+            var xb = parseInt(b/10);
+            if(xa!==xb){
+                return xa-xb;
+            }else{
+                return a%10- b%10  ;
+            }
+        })
+    }else{
+        // color
+        arr.sort(function(a,b){
+            if(a%10 !== b%10){
+                return  a%10-b%10 ;
+            }else{
+            var xa = parseInt(a/10);
+            var xb = parseInt(b/10);
+                return xa-xb;
+            }
+        })
+
+    }
     var ret=""
     for( var x of arr){
         var c = x%10;

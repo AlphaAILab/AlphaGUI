@@ -29,7 +29,7 @@ function _save() {
 function _run(input, timelimit, callback) {
     var bot_path = this.bot_path;
     var bot_dir = path.dirname(this.bot_path);
-    var input_file = path.join(bot_dir, "input_23323333.txt");
+    var input_file = path.join(bot_dir, "input.txt");
     var output_file = path.join(bot_dir, "output_23323333.txt");
     var output_txt = path.join(bot_dir, "output.txt");
     var card = 0, rule_card = 0;
