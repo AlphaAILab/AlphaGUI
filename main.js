@@ -16,7 +16,7 @@ const crashReporter = require('electron').crashReporter;
 crashReporter.start({
   productName: 'AlphaRed7-GUI',
   companyName: 'AlphaRed7-GUI',
-  submitURL: 'http://bugreport.lcybox.com:7077/bugreporter',
+  submitURL: 'http://bugreport.lcybox.com:7077/crashreporter',
   autoSubmit: true
 });
 
