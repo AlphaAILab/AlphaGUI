@@ -49,7 +49,9 @@ function _run(input, timelimit, callback) {
         var fd_out = fs.openSync(output_file, "w");
         var child = spawn(bot_path, {stdio: [fd_in, fd_out, fd_out], cwd: bot_dir});
         var closed = false;
-        
+        if(!child){
+            callback(0,0,0);
+        }
         this.child = child;
         this.fd_in = fd_in;
         this.fd_out = fd_out;

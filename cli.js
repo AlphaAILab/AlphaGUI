@@ -16,13 +16,21 @@ function arrcopy(ret,a){ // ret must be []
         ret.push(x);
     }
 }
-function callback(winner,_detail,_full){
+
+
+function callback(winner,_detail,_full,_r){
+    if(_r!=r){
+        return;
+    }else{
+        r++;
+    }
+    if(r>=r_n) return;
     // console.log(detail)
     // console.log(full)
+    console.log(winner,win)
     win[winner]++
     // console.log(win)
     // console.log(score)
-    r++
 
     var log = ''
     if(full){
@@ -38,19 +46,23 @@ function callback(winner,_detail,_full){
     log+= win+'\n'
     // console.log(log)
     $('#log').after('<pre>'+log+'</pre>');
-    if(r >= r_n) ;
-    else run();
+    // run();
+    setTimeout(function() {
+        run();
+    }, 100);
     // var s = $('#log').val()
-
 }
 function run(){
-    var O = new Once(bot_path1,bot_path2,roundtime,detail,full)
+    var O = new Once(bot_path1,bot_path2,roundtime,detail,full,r)
     O.run(callback)    
 
 }
 
 function click_stop(){
+    if($('#btnstop').hasClass('disabled')) return;
     r_n = 0;
+    $('#btnrun').removeClass('disabled');
+    $('#btnstop').addClass('disabled');
 
 }
 function click_clear(){
@@ -59,7 +71,11 @@ function click_clear(){
 }
 
 function click_run(){
+    if($('#btnrun').hasClass('disabled')) return;
     r = 0
+    win = [0,0]
+    $('#btnrun').addClass('disabled');
+    $('#btnstop').removeClass('disabled');
     bot_path1 = '';
     try{
         bot_path1 = $('#inputPath1').get(0).files[0].path;

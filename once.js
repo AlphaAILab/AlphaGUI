@@ -29,13 +29,14 @@ var _do_operation;
 var removed_cards = [];
 var _score = []
 var _full = []
-
-function Once(bot_path1,bot_path2,roundtime,_detail,_full){
+var token;
+function Once(bot_path1,bot_path2,roundtime,_detail,_full,_token){
     A.bot_path = bot_path1
     B.bot_path = bot_path2
     A.roundtime = B.roundtime = roundtime
     detail = _detail
     full = _full
+    token = _token
 }
 
 
@@ -101,7 +102,7 @@ function start(){
              winner = B;
             B.win+=1
         }
-        _callback(winner.gid,_score,_full)
+        _callback(winner.gid,_score,_full,token)
         return;
     }
 
