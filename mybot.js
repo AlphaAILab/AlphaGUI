@@ -82,7 +82,7 @@ function _run(input, timelimit, callback) {
                 var a = data.split("\n")[0].split(" ").map(x => parseInt(x));
                 return [a[0], a[1]]
             } catch (e) {
-                console.log(e)
+                // console.log(e)
                 return [0, 0];
             }
         }
@@ -93,15 +93,15 @@ function _run(input, timelimit, callback) {
         else {
             //console.log('lalala');
             [rule_card, card] = parse_output(output_txt);
-            console.log([rule_card, card])
+            // console.log([rule_card, card])
         }
 
 
         try {fs.closeSync(fd_in);} catch (e) {console.log(e);}
         try {fs.closeSync(fd_out);} catch (e) {console.log(e);}
         try { fs.unlinkSync(input_file);} catch (e) {console.log(e);}
-        try { fs.unlinkSync(output_file);} catch (e) {console.log(e);}
-        try { fs.unlinkSync(output_txt);} catch (e) {console.log(e);}
+        try { fs.unlinkSync(output_file);} catch (e) {}
+        try { fs.unlinkSync(output_txt);} catch (e) {}
         
         //console.log('debug code:' + code);
         callback(code, card, rule_card)
