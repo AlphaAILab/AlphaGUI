@@ -51,68 +51,69 @@
 
 <div class="container">
     <div class = "row">
-        <div class = "col-sm-7">
+        <div class = "col-sm-12">
           <h4> <label class="label label-info"> Tools</label> </h4>
-        <div class="list-group" id="showbot">
-  
-</div>
+          <div>
 
-<div class="text-center">
-<ul class="pagination" id="page">
-</ul>
-</div>
-        </div>
-
-        <div class = "col-sm-5">
-          
-
-            <div class = "well" style="margin-top:30px;height:350px;">
             <form class="form-horizontal">
   <fieldset>
-    <legend id="title">Select or ADD an AI</legend>
-    <div class="form-group" id="group1" style="display:none">
-      <label for="inputName" class="col-sm-2 control-label">Name</label>
+    <div> <h1>AI Testing</h1> </div>
+      <div class="col-sm-6">
+    <div class="form-group" >
+      <!--<label for="inputPath" class="col-sm-2 control-label">Path</label>-->
 
-      <div class="col-sm-10">
-        <input type="text" pattern="^[0-9a-zA-Z_]{3,12}$" class="form-control" id="inputName" placeholder="Type AI Name">
+        <input type="file" id="inputPath1" >
+        <input type="text" readonly="" class="form-control"  placeholder="Click to Choose the First AI's Executable File">
       </div>
     </div>
-    <div class="form-group" id="group2" style="display:none">
-      <label for="inputPath" class="col-sm-2 control-label">Path</label>
+      <div class="col-sm-6" >
+<div class="form-group" >
+        <input type="file" id="inputPath2" >
+        <input type="text" readonly="" class="form-control"  placeholder="Click to Choose the Second AI's Executable File">
+      </div>
+</div>
+    
+    <div class="form-group" style="margin-top: 0;"> <!-- inline style is just to demo custom css to put checkbox below input above -->
+      <div class="col-md-offset-2 col-md-10">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id = "detail"> Detail
+          </label>
+          <label>
+            <input type="checkbox" id="fulllog" > Full log
+          </label>
+           Timelimit(s): <input type="text" class="" placeholder="2" style="width:40px;margin-right:20px" id="roundtime">
+          Number of Games: <input type="text" class="" placeholder="100" style="width:60px" id ="roundnumber" >
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <!--<label for="textArea" class="col-md-2 control-label">Textarea</label>-->
 
-      <div class="col-sm-10">
-        <input type="file" id="inputPath" >
-        <input type="text" readonly="" class="form-control"  placeholder="Click to Choose Path">
+      <div class="col-md-12" style="margin-left:50px">
+        <div ><h4>Log:</h4>
+        <div id="flog" style="height:160px;overflow-x:scroll;overflow-y:scroll;overflow:scroll">
+          <div  id="log"></div>
+        </div>
+        </div>
+        <!--<span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>-->
       </div>
     </div>
     
-    <div class="form-group" id="group3" style="display:none">
-      <label for="pathinfo" class="col-sm-2 control-label">Path</label>
-
-      <div class="col-sm-10">
-        <textarea type="text" readonly="" class="form-control" id="pathinfo" >
-        </textarea>
-      </div>
-      
-    </div>
-      
     <div class="form-group">
-      <div class="col-md-10 col-md-offset-2" id="btns">
-<!--
-        <button type="button" class="btn btn-default">Reset</button>
-        <button type="submit" class="btn btn-primary">Save</button>-->
-        <!--<button type="button" class="btn btn-danger">DELETE THIS AI</button>-->
+      <div class="col-md-10 col-md-offset-2" style="margin-left:150px">
+        <button type="button" class="btn btn-success btn-raised" onclick="click_run();">Run</button>
+        <button type="button" class="btn btn-danger btn-raised" onclick="click_stop();">Stop</button>
+        <button type="button" class="btn btn-info btn-raised" onclick="click_clear();">Clear</button>
       </div>
     </div>
   </fieldset>
 </form>
-            </div>
-            <div id = "add-ai">
-                <a style="width: 100%" class = "btn btn-raised btn-default" onclick="click_add_ai();">Add New AI</a>
-            </div>
-            <div id = "battle" style="display:none;">
-                <a style="width: 100%" class = "btn btn-raised btn-success" onclick="click_battle();">USE THIS AI</a>
-            </div>
+
+          </div>
+
+        </div>
+
         </div>
     </div>
 </div>
@@ -127,6 +128,7 @@
       <div id="online-list" >
       </div>
 		</nav>
+    <button id="showLeft" class="online-num btn btn-success btn-raised" style="position:absolute;right:20px;top:40px;"></button>
     <!--<button id="showLeft" class="online-num btn btn-success btn-raised" style="position:absolute;left:20px;top:60px;"></button>-->
 </div>
 
