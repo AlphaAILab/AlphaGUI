@@ -67,10 +67,11 @@ function _run(input, timelimit, callback) {
         return;
     }
 
+    var that = this
     var watcher = setTimeout(function () {
         if (closed) return;
         closed = true;
-        this.child.kill("SIGKILL");
+        that.child.kill("SIGKILL");
     }, timelimit);
 
     this.child.on("error", (e) => {
