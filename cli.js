@@ -46,10 +46,10 @@ function callback(winner,_detail,_full,_r){
     log+= win+'\n'
     // console.log(log)
     $('#log').after('<pre>'+log+'</pre>');
-    // run();
-    setTimeout(function() {
-        run();
-    }, 100);
+     run();
+    // setTimeout(function() {
+    //     run();
+    // }, 100);
     // var s = $('#log').val()
 }
 function run(){
@@ -126,7 +126,7 @@ function click_run(){
     } 
     $('#roundnumber').val(roundnum)
     console.log(roundnum)
-    r_n = roundnum
+    r_n = roundnum +1
 
     run(detail,fulllog,roundtime)
 
