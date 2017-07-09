@@ -71,13 +71,15 @@ function Run(X,nxtX){
 
     if(X.type === "bot"){
         var bot = new Bot(X.bot_path);
+        console.log(X.bot_path);
         bot.run(g.gen_input(X.gid), X.roundtime * 1000, function (err, card, rule_card) {
             if (err !== 0) {
                 console.log("error: " + err+' '+card+' '+rule_card);
                 _do_operation(0, 0);
+            } else {
+                // console.log(X.name+" do operation card = " + card + "\trule_card = " + rule_card);
+                _do_operation(card, rule_card);
             }
-            // console.log(X.name+" do operation card = " + card + "\trule_card = " + rule_card);
-            _do_operation(card, rule_card);
         });
     }
 
