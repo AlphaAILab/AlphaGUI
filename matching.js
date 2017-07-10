@@ -423,6 +423,9 @@ function start(){
 
     render_play();
 
+    if(testurl('ready')){
+        $('#play').click();
+    }
 }
 
 
