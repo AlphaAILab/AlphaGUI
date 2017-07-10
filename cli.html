@@ -1,4 +1,5 @@
 <html>
+  <!--Also LAB-->
 <head>
     <meta charset="UTF-8">
     <title>AlphaRed7 Platform</title>
@@ -17,127 +18,118 @@
 
 
     <link href="./static/css/snackbar.min.css" rel="stylesheet">
-
     <link href="./static/css/jquery-confirm.min.css" rel="stylesheet">
     <link href="./static/css/component.css" rel="stylesheet">
     <link href="./static/css/online.css" rel="stylesheet">
-
+    
     <style>
-      .card-lg{
-          width:60px;
-          display: inline-block;
-          margin-left: 8px;
-      }
-      .card-sm{
-          width:30px;
-          height: 60px;
-          display: inline-block;
-          margin-left: 4px;
-      }
-      .card-select{
-          position:relative;
-          top: -20px;
+      #back{
+        position: absolute;
+        /*top:300px;*/
+        bottom: 10px;
+        left: 20px;
       }
       body{
         -webkit-user-select: none;
         user-select: none;
         cursor:default;
       }
-      .rule-text{
-       font-size: 2em; 
-       margin-left: 10px;
-      }
-      .highlight img{
-        box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      .select{
+        outline: 10px solid rgba(63, 81, 181,0.2);
       }
       #bug{
         position: absolute;
         right: 20px;
-        bottom: 30px;
+        bottom: 10px;
       }
       .nosee{
         display: none;
       }
     </style>
 </head>
-
 <body>
 
 <div class="container">
-<div class = "row">
-  <div class = "col-sm-12 text-center">
-    <div class = "well" style="width:720px; height:500px; margin: auto; margin-top: 40px;">
-        <div class="row"> 
-            <div class="col-sm-10">
-                 <div id="handB" style="height: 95px">
+    <div class = "row">
+        <div class = "col-sm-12">
+          <h4> <label class="label label-info"> Tools</label> </h4>
+          <div>
 
-                  </div>
-            </div>
-            <div class="col-sm-2">
-              <div style="display:-webkit-inline-box;">
-                <i class="material-icons" style="font-size:2em;">account_box</i><div id="nameB" style="font-size:1.4em;"> </div>
-                </div>
-                <div style="display: -webkit-inline-box;margin-top:10px;">
-               <i class="material-icons" style="margin-right:4px;">assessment</i> <div id="scoreB" style="margin-right:7px;font-size:1.2em;"></div>
-                <div id="clockB" style="display:-webkit-inline-box;"></div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-                 <div id="paletteB"   style= "margin-top: 0px; height: 100px;"></div>
-         </div>
-        <div class="row " id="rule" style="height:70px; display: -webkit-inline-box"></div>
-        <div class="row"  style="height: 50px;">
-          <div id="op-pan" style="display:none;">
+            <form class="form-horizontal">
+  <fieldset>
+    <div> <h1>AI Testing</h1> </div>
+      <div class="col-sm-6">
+    <div class="form-group" >
+      <!--<label for="inputPath" class="col-sm-2 control-label">Path</label>-->
 
-            <a  style= "width:130px; margin-right: 40px;" href="javascript:click_withdraw()" class="btn btn-sm btn-danger btn-raised " id="withdraw"><i class="material-icons">warning</i>WITHDRAW</a>
-            <a  style= "width:120px;" href="javascript:click_play()" class="btn btn-sm btn-success disabled" id="play"><i class="material-icons">done</i>PLAY!</a>
-            <a  style= "width:120px;" href="javascript:click_card()" class="btn btn-sm btn-info disabled" id="play-card">TO PALETTE</a>
-            <a   style= "width:120px;" href="javascript:click_rule()" class="btn btn-sm btn-info disabled" id="play-rule">CHANGE RULE</a>
-            <a    style= "width:120px;" href="javascript:click_undo()" class="btn btn-sm btn-danger disabled" id="undo"><i class="material-icons">undo</i>UNDO</a>
-            </div>
-        </div>
-        <div class="row"> 
-          <div class="col-sm-12">
-                 <div id="paletteA" style="height:70px;"></div>
-          </div>
-          
-        </div>
-        <div class="row">
-            <div class="col-sm-2">
-              <div style="display:-webkit-inline-box;">
-                <i class="material-icons" style="font-size:2em;">account_box</i><div id="nameA" style="font-size:1.4em;"> </div>
-                </div>
-                <div style="display: -webkit-inline-box;margin-top:10px;">
-               <i class="material-icons" style="margin-right:4px;">assessment</i> <div id="scoreA" style="margin-right:7px;font-size:1.2em;"></div>
-                <div id="clockA" style="display:-webkit-inline-box;"></div>
-                </div>
-            </div>
-             <div class="col-sm-10">
-                 <div id="handA" style="height: 95px;">
-
-                  </div>
-            </div>
-            
-         </div>
+        <input type="file" id="inputPath1" >
+        <input type="text" readonly="" class="form-control"  placeholder="Click to Choose the First AI's Executable File">
+      </div>
     </div>
-  </div>
+      <div class="col-sm-6" >
+<div class="form-group" >
+        <input type="file" id="inputPath2" >
+        <input type="text" readonly="" class="form-control"  placeholder="Click to Choose the Second AI's Executable File">
+      </div>
+</div>
+    
+    <div class="form-group" style="margin-top: 0;"> <!-- inline style is just to demo custom css to put checkbox below input above -->
+      <div class="col-md-offset-2 col-md-10">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id = "detail"> Detail
+          </label>
+          <label>
+            <input type="checkbox" id="fulllog" > Full log
+          </label>
+           Timelimit(s): <input type="text" class="" placeholder="2" style="width:40px;margin-right:20px" id="roundtime">
+          Number of Games: <input type="text" class="" placeholder="100" style="width:60px" id ="roundnumber" >
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <!--<label for="textArea" class="col-md-2 control-label">Textarea</label>-->
 
+      <div class="col-md-12" style="margin-left:50px">
+        <div ><h4>Log:</h4>
+        <div id="flog" style="height:160px;overflow-x:scroll;overflow-y:scroll;overflow:scroll">
+          <div  id="log"></div>
+        </div>
+        </div>
+        <!--<span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>-->
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <div class="col-md-10 col-md-offset-2" style="margin-left:150px">
+        <button type="button" class="btn btn-success btn-raised" onclick="click_run();" id="btnrun">Run</button>
+        <button type="button" class="btn btn-danger btn-raised" onclick="click_stop();" id="btnstop">Stop</button>
+        <button type="button" class="btn btn-info btn-raised" onclick="click_clear();">Clear</button>
+      </div>
+    </div>
+  </fieldset>
+</form>
+
+          </div>
+
+        </div>
+
+        </div>
+    </div>
 </div>
 
-</div>
-
-<img src="./static/img/rainbow-thin.png" style="position:absolute;top:0px;left:0px;"></img>
+<a id="back" class="btn btn-raised btn-primary" href="#" onclick="history.back(1);"><i class="material-icons">arrow_back</i> </a>
 
 <a id="bug" class="btn"  href="#" onclick="bug();"><i class="material-icons">bug_report</i> </a>
-<div id = "online" style="display:none;">
+<div id = "online">
 <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1" style="overflow-y:scroll;">
 			<h3>Online Player</h3>
       <a onclick="click_return();"><i class="material-icons">arrow_back</i> <span class="">BACK</span></a>
       <div id="online-list" >
       </div>
 		</nav>
-    <button id="showLeft" class="online-num btn btn-success btn-raised" style="position:absolute;left:20px;top:60px;"></button>
+    <button id="showLeft" class="online-num btn btn-success btn-raised" style="position:absolute;right:20px;top:40px;"></button>
+    <!--<button id="showLeft" class="online-num btn btn-success btn-raised" style="position:absolute;left:20px;top:60px;"></button>-->
 </div>
 
 <script>window.$ = window.jQuery = require('./static/js/jquery.min');</script>
@@ -147,6 +139,7 @@
 <script src="./online.js"> </script>
 
 <script src="./static/js/bootstrap.min.js"></script>
+
 <script src="./static/js/jquery-confirm.min.js"></script>
 <script>
   // $();
@@ -238,6 +231,6 @@
     });
   });
 </script>
-<script src="./arena.js"></script>
+<script src="./cli.js"> </script>
 </body>
 </html>

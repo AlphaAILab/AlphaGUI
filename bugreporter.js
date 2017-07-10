@@ -6,6 +6,7 @@ const electron = require('electron')
 const desktopCapturer = electron.desktopCapturer
 const electronScreen = electron.screen
 const shell = electron.shell
+const http = require('http');
 
 const fs = require('fs')
 const os = require('os')
@@ -30,7 +31,36 @@ function getBase64Image(img) {
 function do_report(a,b,c){
     // todo
     //console.log(a,b,c);
-    
+    var data = {
+      uuid : localStorage.getItem('uuid'),
+      username : localStorage.getItem('username'),
+      a: a,
+      b: b,
+      c: c
+    }
+    data = JSON.stringify(data);  
+    var opt = {  
+        method: "POST",  
+        host: "bugreport.lcybox.com",  
+        port: 7077,  
+        path: "/bug",  
+        headers: {  
+            "Content-Type": 'application/json',  
+            "Content-Length": data.length  
+        }  
+    };
+    var req = http.request(opt, function (serverFeedback) {  
+        if (serverFeedback.statusCode == 200) {  
+            var body = "";  
+            serverFeedback.on('data', function (data) { body += data; })  
+                          .on('end', function () { res.send(200, body); });  
+        }  
+        else {  
+            res.send(500, "error");  
+        }  
+    }); 
+    req.write(data + "\n");  
+    req.end(); 
 
 }
 
@@ -92,8 +122,3 @@ function bug(){
 
 }
 
-
-function start(){
-    
-}
-$(start);

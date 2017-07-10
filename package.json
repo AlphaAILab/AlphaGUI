@@ -1,28 +1,32 @@
 {
   "name": "alphared7_gui",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "AlphaRed7-GUI is the home and base of AlphaRed7-AI. It has anti-gravity devices to avoid too much energy consuming. And for the anti-invasion of alien, there are 55 auto laser guns on the roof. No one can close to it.",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "electron-packager . AlphaRed7-GUI --platform=darwin,linux,win32 --arch=all --out=dist/ --overwrite --ignore=./node_modules/* --ignore=./dist"
   },
   "repository": {
     "type": "git",
     "url": "https://git.zrt.io:3000/AlphaRed7/GUI.git"
   },
-  "author": "",
+  "author": "zrt, Chenyao2333",
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^3.3.7",
     "bootstrap-material-design": "^0.5.10",
-    "electron": "^1.6.11",
-    "electron-packager": "^8.7.2",
     "express": "^4.15.3",
     "jquery": "^3.2.1",
     "jquery-confirm": "^3.2.3",
     "rasterizehtml": "^1.2.4",
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3"
+  },
+  "devDependencies": {
+    "electron": "^1.6.11",
+    "electron-builder": "^19.12.0",
+    "electron-packager": "^8.7.2"
   }
 }

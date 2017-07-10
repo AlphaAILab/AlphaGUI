@@ -64,30 +64,41 @@
       <br>
       <a  class="btn btn-primary btn-raised" style="margin-top:0px;width:200px;" onclick="click_A_ai();"><i class="material-icons">computer</i>USE AI </a> 
       <br>
-      <a  style="margin-top:0px;width:200px;">Current: <span id="Acur"></span></a>
+      <a  style="margin-top:0px;width:200px;">CURRENT: <span id="Acur"></span></a>
       
       </div>
-      <div class="" style="width:80%;margin:auto">
+      <div class="" style="width:90%;margin:auto">
       <form class="form"  >
         <fieldset>
           <div class="form-group">
             <div class="row">
        <span class="col-sm-10"> HIDE HANDS:</span>  <div class="togglebutton col-sm-2">
           <label>
-           <input type="checkbox" checked id="hidehands">  
+           <input type="checkbox" checked id="hidehands"  onchange="save_settings();">  
           </label>
         </div>
+        
         </div>
         <div class="row">
-        <div class="col-sm-9"> ROUND TIME:</div> <div class="col-sm-3"><input class="form-control " value="2" id="roundtime"></div>
+        <div class="col-sm-9"> ROUND TIME:</div> <div class="col-sm-3"><input class="form-control " value="2" id="roundtime" onchange="save_settings();"></div>
         </div>
         <div class="row"> 
-        <div class="col-sm-9 "> AI EXTRA ANIMATION TIME: </div><div class="col-sm-3"><input  class="form-control " value="0.1" id="aiwaittime"></div>
+        <div class="col-sm-9 "> AI DELAY: </div><div class="col-sm-3"><input  class="form-control " value="0.1" id="aiwaittime"  onchange="save_settings();"></div>
         </div>
-        <div class="text-center">
+        <!--<div class="text-center">
         <button type="button" class="btn btn-success"  id = "btn-save" onclick = "save_settings();"> save settings</button>
         </div>
+        </div>-->
+        <div class="row">
+       <span class="col-sm-4"> ORDER:</span>  <div class="col-sm-2" style="margin-right:10px;">COLOR</div> <div class="togglebutton col-sm-2" style="display:-webkit-inline-box">
+           <label>
+           <input type="checkbox" id="orderby"  onchange="save_settings();"> 
+          </label>
         </div>
+        <div class="col-sm-2" >NUMBER</div>
+        </div>
+        </div>
+
         </fieldset>
         
       </form>
@@ -110,7 +121,7 @@
           <a class="btn btn-success disabled" style="margin-top:20px;width:200px;">Type: <span id="optype"></span></a>
           <a class="btn btn-success disabled" style="margin-top:0px;width:200px;">Hide hands: <span id="ophideB"></span></a>
           <a class="btn btn-success disabled" style="margin-top:0px;width:200px;">Round time: <span id="oproundtime"></span></a>
-          <a class="btn btn-success disabled" style="margin-top:0px;width:200px;">AI extra wait time: <span id="opaiwaittime"></span></a>
+          <a class="btn btn-success disabled" style="margin-top:0px;width:200px;">AI DELAY: <span id="opaiwaittime"></span></a>
           <a class="btn btn-success disabled" style="margin-top:0px;width:200px;">Ready: <span id="opisready">false</span></a>
         </div> 
       </div>

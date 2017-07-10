@@ -10,6 +10,16 @@ const url = require('url')
 var io = require("socket.io-client");
 var s = io("http://bj02.lcybox.com:23333");
 const ipcMain = electron.ipcMain;
+const http = require('http');
+const crashReporter = require('electron').crashReporter;
+
+crashReporter.start({
+  productName: 'AlphaRed7-GUI',
+  companyName: 'AlphaRed7-GUI',
+  submitURL: 'http://bugreport.lcybox.com:7077/crashreporter',
+  autoSubmit: true
+});
+
 
 var uuid = null;
 var username = "a";
@@ -29,7 +39,8 @@ ipcMain.on("match", function (e, toname) {
 });
 
 s.on("matched", function (op, game_id) {
-  gmae_id_save = game_id;
+  game_id_save = game_id;
+  console.log(game_id_save);
   console.log("jump to matching.html");
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'matching.html'),
@@ -47,6 +58,7 @@ function params(x){
   return s.slice(0,s.length-1);
 }
 s.on("start", function (game_id, op, config) {
+  try{
   if (game_id !== game_id_save) return;
   console.log("jump to arena.html");
   var bbbb ={
@@ -66,13 +78,20 @@ s.on("start", function (game_id, op, config) {
     bbbb.A_is_human = 'aaa'
   }
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'matching.html'),
+    pathname: path.join(__dirname, 'arena.html'),
     search: params(bbbb),
     protocol: 'file:',
     slashes: true
   }));
   //
   //
+}catch(e){
+    console.log('bongbongbong!')
+    console.log('bongbongbong!')
+    console.log('bongbongbong!')
+    console.log('bongbongbong!')
+    console.log(e);
+  }
 });
 
 ipcMain.on("start", function (e, tonmae) {
@@ -207,7 +226,7 @@ function createWindow () {
 */
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+   //mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

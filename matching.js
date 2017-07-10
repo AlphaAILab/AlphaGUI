@@ -40,16 +40,15 @@ function testurl(key){
 // //
 
 
+
 function click_human(){
     A_is_ai = false;
     A_is_human = true;
     Atype = 'human'
-    
-    Aroundtime = 100;
-    $('#roundtime').val(100);
 
-    $('#Acur').text('human');
+    $('#Acur').text('HUMAN');
 
+    show_settings();
     save_settings();
 
     render_play();
@@ -114,7 +113,7 @@ function get_my_param(){
         ret.type = 'human';
     }else if(A_is_ai){
         ret.type = 'ai';
-        ret.botid = A.botid;
+        ret.botid = Abot.botid;
     }
     ret.roundtime = Aroundtime;
     ret.hide = hideB;
@@ -126,10 +125,11 @@ function get_my_param(){
 function process_start() {
     if (is_ready && op_is_ready) {
         start_timer = setTimeout(function() {
-            if (is_ready  && op_is_ready) {
+            console.log('send start');
+            if (myid < opid && is_ready  && op_is_ready) {
                 ipc.send("start", opid);
             }
-        }, 3000);
+        }, 2000);
     } else {
         if (start_timer) clearTimeout(start_timer);
     }
@@ -137,7 +137,7 @@ function process_start() {
 
 function send_config() {
     let config = get_my_param();
-    ipc.send("forward", "set_config", opid, config);
+    ipc.send("forward", opid, "set_config", config);
 
     process_start();
 }
@@ -147,7 +147,7 @@ function reigster_set_config() {
         $("#optype").text(op_config.type);
         $("#ophideB").text(op_config.hide);
         $("#oproundtime").text(op_config.roundtime);
-        $("#opaiwaittime").text(op_config.aiwaittime);
+        $("#opaiwaittime").text(op_config.aiwaittime/1000);
         $("#opisready").text(op_config.is_ready);
         
         op_is_ready = op_config.is_ready;
@@ -157,7 +157,34 @@ function reigster_set_config() {
     });
     ipc.send("register", "set_config");
 }
-
+function show_settings(){
+    if(Atype === 'human'){
+        var _hide = localStorage.getItem('human_hide');
+        if(_hide === 'false'){
+            hideB=false;
+        }else{
+            hideB=true;
+        }
+        $('#hidehands').attr('checked',hideB);
+        $('#roundtime').val(localStorage.getItem('human_roundtime'));
+        $('#aiwaittime').val(localStorage.getItem('aiwaittime'));
+    }else{
+        var _hide = localStorage.getItem('ai_hide');
+        if(_hide === 'false'){
+            hideB=false;
+        }else{
+            hideB=true;
+        }
+        $('#hidehands').attr('checked',hideB);
+        $('#roundtime').val(localStorage.getItem('ai_roundtime'));
+        $('#aiwaittime').val(localStorage.getItem('aiwaittime'));
+    }
+    var order = localStorage.getItem('orderby');
+    var orderby = false;
+    if(order === 'number') orderby =true;
+    $('#orderby').attr('checked',orderby);
+    save_settings();
+}
 function save_settings(dont_call){
     hideB = $('#hidehands').is(":checked");
     var x =  $('#roundtime').val();
@@ -171,17 +198,32 @@ function save_settings(dont_call){
 
     var y = $('#aiwaittime').val();
     try{y = parseFloat(y);}catch(e){};
-    if(typeof(y) === 'number' && y>=0 && y<=5){
+    if(typeof(y) === 'number' && y>=0 && y<=20){
         AI_wait_time = y*1000;
     }else{
         y=0.1;
     }
     $('#aiwaittime').val(y);
 
-    console.log(get_my_param());
-
+    // console.log(get_my_param());
+    
     if (!dont_call) {
         render_play();
+    }
+    if($('#orderby').is(":checked")){
+        localStorage.setItem('orderby','number');
+    }else{
+        localStorage.setItem('orderby','color');
+
+    }
+    if(Atype === 'human'){
+        localStorage.setItem('human_hide',hideB);
+        localStorage.setItem('human_roundtime',x);
+        localStorage.setItem('aiwaittime',y);
+    }else{
+        localStorage.setItem('ai_hide',hideB);
+        localStorage.setItem('ai_roundtime',x);
+        localStorage.setItem('aiwaittime',y);
     }
 
     if (Btype == "remote") {
@@ -211,26 +253,21 @@ function click_remote_play() {
     if (is_ready) {
         is_ready = false;
         $("#play").text("ready");
-        $("#btn-save").hide();
+        $("#btn-save").show();
     } else {
         is_ready = true;
         $("#play").text("cancel");
-        $("#btn-save").show();
+        $("#btn-save").hide();
     }
 
     send_config();
 }
 
 
-function render_play(){
-    save_settings("sb");
-    $('#play').removeAttr('href');
-    if (Btype == "remote") {
-        if (is_ready)  $("#play").text("cancel");
-        else $("#play").text("ready");
-    }
-    if(Atype === 'human' && Btype === 'ai'){
-        $('#play').attr('href','./arena.html?'+$.param({
+function click_local_play(x){
+    save_settings();
+    if(x === 'human_ai'){
+        location.href = './arena.html?'+$.param({
             url : 'aaaa',
             game_type : 'human_ai',
             Bname : 'AI:'+Bbot.name,
@@ -241,9 +278,9 @@ function render_play(){
             AIwaittime : AI_wait_time,
             hideB : hideB,
             Bbotid : Bbot.botid
-        }))
-    }else if(Atype === 'ai' && Btype === 'ai'){
-        $('#play').attr('href','./arena.html?'+$.param({
+        })
+    }else if(x==='ai_ai'){
+        location.href = './arena.html?'+$.param({
             url : 'aaaa',
             game_type : 'ai_ai',
             Aname : 'AI:'+Abot.name,
@@ -256,7 +293,23 @@ function render_play(){
             hideB : hideB,
             Abotid : Abot.botid,
             Bbotid : Bbot.botid
-        }))
+        })
+    }else{
+        console.log(x);
+    }
+}
+
+function render_play(){
+    save_settings("sb");
+    $('#play').removeAttr('href');
+    if (Btype == "remote") {
+        if (is_ready)  $("#play").text("cancel");
+        else $("#play").text("ready");
+    }
+    if(Atype === 'human' && Btype === 'ai'){
+        $('#play').attr('href','javascript:click_local_play("human_ai");')
+    }else if(Atype === 'ai' && Btype === 'ai'){
+        $('#play').attr('href','javascript:click_local_play("ai_ai");')
     }else if(Atype === 'ai' && Btype === 'remote'){
         $('#play').attr('href','javascript:click_remote_play()');
     }else if(Atype === 'human' && Btype === 'remote'){
@@ -286,7 +339,7 @@ function start(){
     if(A_is_ai && A_is_human) alert('both human & ai');
     if(B_is_ai && B_is_remote) alert('both ai & remote');
 
-    var Acur = 'not choose';
+    var Acur = 'NOT CHOOSE';
     if(A_is_ai){
         Atype = 'ai';
         var botlist = JSON.parse(localStorage.getItem('botlist'));
@@ -300,7 +353,7 @@ function start(){
     }
     if(A_is_human){
         Atype = 'human';
-        Acur = 'human'
+        Acur = 'HUMAN'
 
         Aroundtime = 100;
         $('#roundtime').val(100);
@@ -337,11 +390,25 @@ function start(){
             })
         });
         reigster_set_config();
+
+        setInterval(function() {
+            if (is_ready) {
+                save_settings();
+            }
+        }, 1000);
+        setInterval(function() {
+            if (!is_ready) {
+                save_settings();
+            }
+        }, 3000);
     }
-    if(A_is_ai && B_is_ai){
-        hideB = false;
-        $('#hidehands').attr('checked',false);
-    }
+
+    show_settings();
+    // if(A_is_ai && B_is_ai){
+    //     hideB = false;
+    //     $('#hidehands').attr('checked',false);
+    // }
+
 
 
 
