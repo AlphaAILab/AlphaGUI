@@ -424,7 +424,20 @@ function start(){
     render_play();
 
     if(testurl('ready')){
-        $('#play').click();
+        $.alert({
+            title: `Automatic Ready in 3s!`,
+            content: `Automatic Ready in 3s, click CANCEL to cancel it.`,
+            autoClose: `OK|3000`,
+            buttons:{
+                OK : function(){
+                    document.getElementById("play").click(); 
+                },
+                cancel: function(){
+                    console.log('canceled');
+                }
+            }
+        })
+        
     }
 }
 
