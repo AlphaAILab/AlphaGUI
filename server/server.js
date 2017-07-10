@@ -56,11 +56,10 @@ function check_matching() {
         if (!user) continue;
         if (!user.opponent) continue;
         var touser = name2user[user.opponent];
-        if (!touser) continue;
-        if (!touser.socket) continue;
-        
-        if (touser.opponent !== name) {
-            user.socket.emit("opponet_disconnected", name);
+        console.log("before " + name );
+        if (!touser || !touser.opponent || touser.opponent != name) {
+            console.log("after ");
+            user.socket.emit("opponet_disconnected", user.opponent);
         }
     }
 }
@@ -109,7 +108,7 @@ io.on("connection", function(socket) {
             return;
         }
 
-        console.log(user.name + " to " + toname + ": " + cmd + "\t" + args);
+        console.log(user.name + " to " + toname + ": " + cmd + "\t" + args + "\t" + game_id);
         var touser = name2user[toname];
         if (touser === undefined || touser.socket === null) {
             console.log("forward_failed");
@@ -117,7 +116,8 @@ io.on("connection", function(socket) {
         } else {
             console.log("forward");
             if (cmd === "set_config") {
-                if (tyeof(game_id) === "string" && game_id.length > 4) {
+                if (typeof(game_id) === "string" && game_id.length > 4) {
+                    if (!kv[game_id]) kv[game_id] = {}
                     kv[game_id][user.name] = args;
                 }
             }
@@ -143,15 +143,17 @@ io.on("connection", function(socket) {
             touser.opponent = user.name;
             touser.status = "fighting";
             touser.socket.emit("matched", user.name, game_id);
-            socket.emit("matched", op);
+            socket.emit("matched", op, game_id);
         }
     });
 
-    socket.on("start", function(toname, gmae_id) {
+    socket.on("start", function(toname, game_id) {
+        console.log('start ..'+toname)
         var touser = name2user[toname];
-        if (toname && toname.socket) {
-            touser.socket.emit("start", game_id, op_name, kv[game_id]);
-            socket.emit("start", game_id, op_name, kv[game_id]);
+        if (toname && touser.socket) {
+            console.log('start ..2')
+            touser.socket.emit("start", game_id, user.name, kv[game_id]);
+            socket.emit("start", game_id, toname, kv[game_id]);
         }
     });
 
