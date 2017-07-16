@@ -26,13 +26,13 @@ var round_num=0;
 var start_time = 0;
 var _do_operation;
 var removed_cards = [];
-var round_wait_time = 3; // 两场间隔时间
+var round_wait_time = 1.5; // 两场间隔时间
 var _cid; // active cid
 var _card,_rule_card; // active cards
 var hideB = true; // hide op
 var last_rule_card=0;
 var AI_wait_time = 100; // 毫秒
-var return_wait_time=5;
+var return_wait_time=3;
 var _op_timeout = false;
 
 var backparam = {}
@@ -330,7 +330,7 @@ function show_win(winner){
 }
 
 function do_timeout(X,do_operation) {
-    $('#clock'+X.x).text('timeout!');
+    $('#clock'+X.x).text('');
     if(X.type === 'remote' || X.type === 'bot' ){
         //不用干
     }else{
@@ -658,7 +658,7 @@ function receive(){
             }
             backparam.B_is_remote = 'aaa';
             backparam.Bname = B.name;
-
+            backparam.ready = 'aaa';
             if(_op_timeout){
                 backparam = {};
             }
